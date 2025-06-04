@@ -6,34 +6,37 @@
         <template #header>
           <img alt="user header" src="/images/photo_turismo.jpg"/>
         </template>
+        <template #title>
+          <p class="text-center"> {{ at.nombre }} </p>
+        </template>
         <template #content>
-          <ScrollPanel style="width: 100%; height: 200px">
+          <ScrollPanel style="width: 100%; height: 160px">
             <div class="grid grid-cols-2 gap-2">
               <!-- Tipo -->
               <div>
-                <p class="text-center"><strong>Tipo</strong></p>
-                <p class="text-center"> {{ at.tipo }} </p>
+                <p class="text-center text-sm"><strong>Tipo</strong></p>
+                <p class="text-center text-sm"> {{ at.tipo }} </p>
               </div>
               <!-- Precio -->
               <div>
-                <p class="text-center"><strong> Precio </strong></p>
-                <p class="text-center"> {{ at.precio }} bs </p>
+                <p class="text-center text-sm"><strong> Precio </strong></p>
+                <p class="text-center text-sm"> {{ at.precio }} bs </p>
               </div>
             </div>
             <!-- Direccion -->
             <div>
-              <p><strong> Direccion </strong></p>
-              <p> {{ at.ubicacion }} </p>
+              <p class="text-sm"><strong> Direccion </strong></p>
+              <p class="text-sm"> {{ at.ubicacion }} </p>
             </div>
             <!-- Horarios -->
             <div>
-              <p><strong> Horarios </strong></p>
-              <p> {{ at.horarios }} </p>
+              <p class="text-sm"><strong> Horarios </strong></p>
+              <p class="text-sm"> {{ at.horarios }} </p>
             </div>
             <!-- Descripcion -->
             <div>
-              <p><strong> Descripcion </strong></p>
-              <p> {{ at.descripcion }} </p>
+              <p class="text-sm"><strong> Descripcion </strong></p>
+              <p class="text-sm"> {{ at.descripcion }} </p>
             </div>
           </ScrollPanel>
           <Divider />
