@@ -47,6 +47,9 @@
 
     <Fieldset legend="Gestion de Usuarios">
       <DataTable :value="Usuarios" size="small" showGridlines paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]">
+        <template #empty>
+          <p> No hay usuarios </p>
+        </template>
         <template #header>
           <div class="flex items-end justify-end gap-2">
             <InputText placeholder="Filtrar usuario..." size="small"/>
@@ -72,7 +75,7 @@
         <Column header="Acciones">
           <template #body="slotProps">
             <div class="flex justify-center gap-2">
-              <Button icon="pi pi-trash" variant="text" severity="warn"/>
+              <!-- <Button icon="pi pi-trash" variant="text" severity="warn"/> -->
               <Button icon="pi pi-pencil" variant="text" @click="funcEditarUsuario(slotProps.data.id)" />
             </div>
           </template>

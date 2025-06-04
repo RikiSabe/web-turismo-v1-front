@@ -78,9 +78,9 @@
         <Column header="Acciones">
           <template #body="slotProps">
             <div class="flex justify-center gap-2">
-              <Button icon="pi pi-trash" variant="text" severity="warn"/>
+              <!-- <Button icon="pi pi-trash" variant="text" severity="warn"/> -->
               <Button icon="pi pi-pencil" type="button" variant="text" @click="funcEditarAtraccionTuristica(slotProps.data.id)" />
-              <Button icon="pi pi-eye" variant="text" severity="contrast"/>
+              <Button icon="pi pi-eye" variant="text" severity="contrast" @click="funcDetallesAtraccionTuristica(slotProps.data.id)" />
             </div>
           </template>
         </Column>
@@ -95,12 +95,20 @@
       @refreshList="funcObtenerAtraccionesTuristicas"
       @modified="funcAtraccionTuristicaEditada"
     />
+
+    <DetallesAtraccionTuristica 
+      :id="id_atraccion"
+      :open="VisibleDetallesAtraccionTuristica"
+      v-if="VisibleDetallesAtraccionTuristica"
+      @hidden="VisibleDetallesAtraccionTuristica = false"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
   import { AgregarAtraccionTuristica, ObtenerAtraccionesTuristicas } from '~/api/atracciones-turisticas'
   import EditarAtraccionTuristica from '~/components/admin/atracciones-turisticas/EditarAtraccionTuristica.vue'
+  import DetallesAtraccionTuristica from '~/components/admin/atracciones-turisticas/DetallesAtraccionTuristica.vue'
   definePageMeta({ layout: 'menu-admin' })
 
   const AtraccionesTuristicas = ref<any>([])
@@ -112,6 +120,9 @@
   // Editar Atraccion Turistica
   const VisibleEditarAtraccionTuristica = ref(false)
   const id_atraccion = ref(0)
+
+  // Detalles Atraccion Turistica
+  const VisibleDetallesAtraccionTuristica = ref(false)
 
   const initialValues = reactive({
     tipo : selectTipoAtraccion,
@@ -167,5 +178,10 @@
       detail: 'Los datos se actualizaron correctamente.',
       life: 3000,
     })
+  }
+
+  const funcDetallesAtraccionTuristica = (row : any) => {
+    VisibleDetallesAtraccionTuristica.value = true
+    id_atraccion.value = row
   }
 </script>

@@ -54,7 +54,7 @@
         <Column header="Acciones">
           <template #body="slotProps">
             <div class="flex justify-center gap-2">
-              <Button icon="pi pi-trash" variant="text" severity="warn"/>
+              <!-- <Button icon="pi pi-trash" variant="text" severity="warn"/> -->
               <Button icon="pi pi-pencil" variant="text" @click="funcEditarAgencia(slotProps.data.id)" />
             </div>
           </template>

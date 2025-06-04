@@ -1,8 +1,8 @@
 <template>
   <div class="p-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-    <Card v-for="item in Contenido" style="overflow: hidden;">
+    <Card v-for="item in Contenido" :key="item.title" style="overflow: hidden;">
       <template #header>
-        <!-- <img alt="user header" :src="item.src"/> -->
+        <img alt="user header" :src="item.src"/>
       </template>
       <template #title>
         <p class="text-center"> {{ item.title }} </p>
@@ -12,7 +12,7 @@
       </template>
       <template #footer>
         <div class="flex justify-center">
-          <Button label="Ver más.."  variant="outlined" />
+          <Button label="Ver más.."  variant="outlined" @click="item.onClick && item.onClick()"/>
         </div>
       </template>
     </Card>
@@ -21,6 +21,7 @@
 
 <script setup lang="ts">
   definePageMeta({ layout: 'menu' })
+  const router = useRouter()
 
   const Contenido = [
     {
@@ -31,12 +32,13 @@
     {
       title: 'Atracciones Turísticas',
       content: 'Descubre los destinos más fascinantes: ruinas históricas, maravillas naturales y experiencias culturales inolvidables.',
-      src: '/images/photo_turismo.jpg'
+      src: '/images/photo_turismo.jpg',
+      onClick: () => router.push('/menu/publico/atracciones-turisticas'),
     },
     {
       title: 'Paquetes Turísticos',
       content: 'Explora nuestras opciones de viaje todo incluido. Tenemos el paquete ideal para cada tipo de viajero.',
-      src: '/images/photo_turismo.jpg'
+      src: '/images/photo_turismo.jpg',
     },
     {
       title: 'Itinerario',
