@@ -52,6 +52,7 @@
 <script setup lang="ts">
   import { ObtenerAtraccionesTuristicas } from '~/api/atracciones-turisticas'
   
+  definePageMeta({ layout : 'menu' })
   const AtraccionesTuristicas = ref<any>([])
   const toast = useToast()
   onMounted( async () => {

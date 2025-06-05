@@ -1,10 +1,6 @@
-<template>
-  <Inicio />  
-</template>
+<template></template>
 
 <script setup lang="ts">
-  import Inicio from './inicio.vue'
-  definePageMeta({ layout: 'menu' })
   const router = useRouter()
-  router.push('/inicio')
+  router.replace('/menu/publico/inicio')
 </script>
