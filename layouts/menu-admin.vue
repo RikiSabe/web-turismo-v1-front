@@ -23,6 +23,6 @@
     { label: 'Atracciones Turisticas', route: 'atracciones-turisticas' },
     { label: 'Agencias', route: 'agencias' },
     // { label: 'Roles', route: 'roles' },
-    { label: 'Cerrar Sesion', route: '/inicio' },
+    { label: 'Cerrar Sesion', route: '/menu/publico/inicio' },
   ]
 </script>
