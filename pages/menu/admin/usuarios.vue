@@ -124,7 +124,7 @@
   const visisbleNuevoUsuario = ref(false)
   const Usuarios = ref<any>([])
   const selectRol = ref('')
-  const Roles = ref(['admin', 'turista'])
+  const Roles = ref(['admin', 'turista', 'encargado turismo'])
   
   //Editar Usuario
   const VisibleEditarUsuario = ref(false)

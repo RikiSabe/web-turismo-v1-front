@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-  definePageMeta({ layout: 'menu' })
+  definePageMeta({ layout: 'menu-turista' })
   const router = useRouter()
 
   const Contenido = [
@@ -33,13 +33,31 @@
       title: 'Atracciones Turísticas',
       content: 'Descubre los destinos más fascinantes: ruinas históricas, maravillas naturales y experiencias culturales inolvidables.',
       src: '/images/photo_turismo.jpg',
-      onClick: () => router.push('/menu/publico/atracciones-turisticas'),
+      onClick: () => router.push('/menu/turista/atracciones-turisticas'),
     },
     {
       title: 'Paquetes Turísticos',
       content: 'Explora nuestras opciones de viaje todo incluido. Tenemos el paquete ideal para cada tipo de viajero.',
       src: '/images/photo_turismo.jpg',
-      onClick: () => router.push('/menu/publico/paquetes-turisticos'),
+      onClick: () => router.push('/menu/turista/paquetes-turisticos'),
+    },
+    {
+      title: 'Itinerario',
+      content: 'Organiza tus días con itinerarios detallados para aprovechar al máximo cada destino y actividad.',
+      src: '/images/photo_turismo.jpg',
+      onClick: () => router.push('/menu/turista/itinerario'),
+    },
+    {
+      title: 'Reservas',
+      content: 'Reserva tu próxima aventura de forma rápida, segura y al mejor precio garantizado.',
+      src: '/images/photo_turismo.jpg',
+      onClick: () => router.push('/menu/turista/reservas'),
+    },
+    {
+      title: 'Pagos',
+      content: 'Realiza tus pagos en línea de forma segura y elige entre múltiples métodos de pago disponibles.',
+      src: '/images/photo_turismo.jpg',
+      onClick: () => router.push('/menu/turista/pagos'),
     }
   ]
 </script>
