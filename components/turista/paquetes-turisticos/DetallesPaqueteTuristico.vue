@@ -99,7 +99,7 @@
   const handleReservation = async () => {
     console.log("Procesando reserva...");
     try {
-      const res = await $fetch(server.HOST + '/api/v1/reservas', {
+      const res = await $fetch(server.HOST + '/api/v1/reservas/1', {
         method: 'POST',
         body: {
           id_paquete: Paquete.id,

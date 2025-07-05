@@ -1,5 +1,5 @@
 <template>
-  <Dialog v-model:visible="visisbleModal" modal :style="{ width: '30rem' }">
+  <Dialog v-model:visible="visibleModal" modal :style="{ width: '30rem' }">
     <template #header>
       <span class="font-bold whitespace-nowrap">Modificar usuario</span>
     </template>
@@ -44,7 +44,7 @@
       </div>
       <div class="flex gap-2">
         <Button label="Guardar" type="submit" fluid />
-        <Button label="Cancelar" type="button" @click="visisbleModal = false" fluid />
+        <Button label="Cancelar" type="button" @click="visibleModal = false" fluid />
       </div>
     </Form>
   </Dialog>
@@ -56,7 +56,7 @@
   interface Props { open: boolean, id: number }
   const props = defineProps<Props>()
   const emit = defineEmits(['hidden', 'refreshList', 'modified'])
-  const visisbleModal = ref(props.open)
+  const visibleModal = ref(props.open)
 
   const selectRol = ref()
   const Roles = ref(['admin', 'turista'])
@@ -82,7 +82,7 @@
     await funcObtenerUsuario()
   })
 
-  watch(visisbleModal, (newVal) => { if( !newVal ) { emit('hidden') } })
+  watch(visibleModal, (newVal) => { if( !newVal ) { emit('hidden') } })
 
   async function funcObtenerUsuario() {
     const response = await ObtenerUsuario(props.id)
@@ -102,7 +102,7 @@
     if(response){
       emit('modified')
       emit('refreshList')
-      visisbleModal.value = false
+      visibleModal.value = false
     }
   }
 </script>
