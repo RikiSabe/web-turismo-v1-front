@@ -14,25 +14,36 @@
         >
           <div class="flex flex-col gap-1">
             <label for="correo" class="text-sm text-slate-500"> Correo electrónico </label>
-            <InputText id="correo" name="correo" v-model="initialValues.correo" aria-describedby="correo-help" />
-            <Message v-if="$form.correo?.invalid" severity="error" size="small" variant="simple">{{ $form.correo.error.message }}</Message>
+            <InputText 
+              id="correo" name="correo"
+              v-model="initialValues.correo" 
+              aria-describedby="correo-help" />
+            <Message v-if="$form.correo?.invalid" severity="error" size="small" variant="simple">
+              {{ $form.correo.error.message }}
+            </Message>
           </div>
 
           <div class="flex flex-col gap-1">
             <label for="contra" class="text-sm text-slate-500"> Contraseña </label>
-            <Password id="contra" name="contra" v-model="initialValues.contra" toggleMask :feedback="false" inputClass="w-full" aria-describedby="contra-help" />
-            <Message v-if="$form.contra?.invalid" severity="error" size="small" variant="simple">{{ $form.contra.error.message }}</Message>
+            <Password 
+              id="contra" name="contra"
+              v-model="initialValues.contra" toggleMask 
+              :feedback="false" inputClass="w-full" 
+              aria-describedby="contra-help" />
+            <Message v-if="$form.contra?.invalid" severity="error" size="small" variant="simple">
+              {{ $form.contra.error.message }}
+            </Message>
           </div>
 
           <Button type="submit" label="Ingresar" variant="outlined" :disabled="!$form.valid" />
         </Form>
-        <Divider align="center">
+        <!-- <Divider align="center">
           <p> o tambien </p>
         </Divider>
         <div class="flex gap-2">
           <Button label="Facebook" icon="pi pi-facebook" variant="outlined" fluid />
           <Button label="Google" icon="pi pi-google" variant="outlined" fluid />
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

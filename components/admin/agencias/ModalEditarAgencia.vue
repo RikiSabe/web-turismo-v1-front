@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { ModificarAgencia, ObtenerAgencia } from '~/api/agencias';
+  import { ModificarAgencia, ObtenerAgencia } from '~/api/agencias';
 
   interface Props { open: boolean, id: number }
   const props = defineProps<Props>()
