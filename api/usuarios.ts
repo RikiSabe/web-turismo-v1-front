@@ -43,7 +43,7 @@ export async function AgregarUsuario(usuario:any): Promise<boolean> {
       headers: {
         "Content-Type" : "application/json"
       },
-      body: JSON.stringify(usuario)
+      body: usuario
     })
     return true
   } catch(e){

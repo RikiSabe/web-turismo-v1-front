@@ -1,85 +1,225 @@
 <template>
-  <Dialog v-model:visible="visibleModal" modal :style="{ width: '30rem' }">
+  <Drawer v-model:visible="visibleModal" position="full">
     <template #header>
-      <span class="font-bold whitespace-nowrap">Agregar nueva agencia</span>
+      <span class="font-bold whitespace-nowrap">Modificar agencia</span>
     </template>
-    <Form :initialValues @submit="onFormSubmit" class="flex flex-col gap-2">
-      <div class="flex grid-cols-2 gap-2">
-        <div>
-          <label for="nombre" class="text-sm text-slate-500"> Nombre </label>
-          <InputText id="nombre" v-model="initialValues.nombre" aria-describedby="nombre-help" size="small" fluid />
-        </div>
-        <div>
-          <label for="direccion" class="text-sm text-slate-500"> Direccion </label>
-          <InputText id="direccion" v-model="initialValues.direccion" aria-describedby="direccion-help" size="small" fluid/>
-        </div>
-      </div>
-      <div class="flex flex-col gap-2">
-        <label for="telefono" class="text-sm text-slate-500"> Telefono </label>
-        <InputText id="telefono" v-model="initialValues.telefono" aria-describedby="telefono-help" size="small"/>
-      </div>
-      <div class="flex flex-col gap-2">
-        <label for="correo" class="text-sm text-slate-500"> Correo electronico </label>
-        <InputText id="correo" v-model="initialValues.correo_electronico" aria-describedby="correo-help" size="small"/>
-      </div>
+    <Form
+      v-slot="$form" class="flex flex-col gap-4" id="form_modificar_agencia"
+      :initialValues="initialValues" :resolver="resolver" 
+      @submit="onFormSubmit" >
+      
       <div class="grid grid-cols-2 gap-2">
-        <div class="flex flex-col gap-2">
-          <label for="estado" class="text-sm text-slate-500"> Estado </label>
-          <Select :options="Estados" option-label="nombre" option-value="valor" v-model="selectEstado" size="small"/>
+        <!-- Nombre agencia -->
+        <div class="flex flex-col gap-1">
+          <label for="nombre" class="text-sm text-slate-500"> Nombre </label>
+          <InputText 
+            id="nombre" name="nombre" placeholder="Ingrese el nombre de la agencia"
+            v-model="initialValues.nombre"
+            size="small" fluid />
+          <Message v-if="$form.nombre?.invalid" severity="error" size="small" variant="simple">
+            {{ $form.nombre.error.message }}
+          </Message>
+        </div>
+
+        <!-- Telefono agencia -->
+        <div class="flex flex-col gap-1">
+          <label for="telefono" class="text-sm text-slate-500"> Telefono </label>
+          <InputText 
+            id="telefono" name="telefono" placeholder="Ingrese el telefono de la agencia"
+            v-model="initialValues.telefono"
+            size="small" fluid />
+          <Message v-if="$form.telefono?.invalid" severity="error" size="small" variant="simple">
+            {{ $form.telefono.error.message }}
+          </Message>
+        </div>
+
+        <!-- Correo Electronico agencia -->
+        <div class="flex flex-col gap-1">
+          <label for="correo" class="text-sm text-slate-500"> Correo electronico </label>
+          <InputText 
+            id="correo" name="correo" placeholder="Ingrese el correo electronico de la agencia"
+            v-model="initialValues.correo"
+            size="small" fluid />
+          <Message v-if="$form.correo?.invalid" severity="error" size="small" variant="simple">
+            {{ $form.correo.error.message }}
+          </Message>
+        </div>
+
+        <!-- Encargado agencia -->
+        <div class="flex flex-col gap-1">
+          <label for="encargado" class="text-sm text-slate-500"> Encargado de la Agencia</label>
+          <Select 
+            id="encargado" name="encargado"
+            placeholder="Seleccione el usuario que será encargado"
+            v-model="initialValues.id_encargado" :options="Encargados"
+            option-label="nombre" option-value="id" checkmark size="small" />
+          <Message v-if="$form.encargado?.invalid" severity="error" size="small" variant="simple">
+            {{ $form.encargado.error.message }}
+          </Message>
         </div>
       </div>
-      <div class="flex gap-2">
-        <Button label="Guardar" type="submit" fluid />
-        <Button label="Cancelar" type="button" @click="visibleModal = false" fluid />
+
+      <!-- Descripcion agencia -->
+      <div class="flex flex-col gap-1">
+        <label for="descripcion" class="text-sm text-slate-500"> Descripción </label>
+        <InputText 
+          id="descripcion" name="descripcion" placeholder="Ingrese la descripcion de la agencia"
+          v-model="initialValues.descripcion" 
+          size="small" fluid />
+        <Message v-if="$form.descripcion?.invalid" severity="error" size="small" variant="simple">
+          {{ $form.descripcion.error.message }}
+        </Message>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <!-- Departamento agencia -->
+        <div class="flex flex-col gap-1">
+          <label for="departamento" class="text-sm text-slate-500"> Departamento </label>
+          <Select 
+            id="departamento" name="departamento"
+            placeholder="Seleccione el departamento donde se encuentra la agencia"
+            v-model="initialValues.id_departamento" :options="Departamentos" 
+            optionLabel="nombre" optionValue="id" checkmark size="small"/>
+          <Message v-if="$form.departamento?.invalid" severity="error" size="small" variant="simple">
+            {{ $form.departamento.error.message }}
+          </Message>
+        </div>
+
+        <!-- Direccion escrita agencia -->
+        <div class="flex flex-col gap-1">
+          <label for="direccion" class="text-sm text-slate-500"> Direccion </label>
+          <InputText 
+            id="direccion" name="direccion" placeholder="Ingrese la direccion escrita de la agencia"
+            v-model="initialValues.direccion" aria-describedby="direccion-help" 
+            size="small" fluid/>
+          <Message v-if="$form.direccion?.invalid" severity="error" size="small" variant="simple">
+            {{ $form.direccion.error.message }}
+          </Message>
+        </div>
+
+        <!-- Falta estado -->
+         <div class="flex flex-col gap-1">
+            <label for="estado" class="text-sm text-slate-500"> Estado </label>
+            <Select
+              id="estado" name="estado"
+              placeholder="Seleccione el estado de la agencia"
+              v-model="selectEstado" :options="Estados"
+              optionValue="valor" optionLabel="nombre"
+              size="small" fluid/>
+         </div>
+      </div>
+
+      <div>
+        <FileUpload
+          choose-label="Elegir Imagenes" cancel-label="Eliminar todas las fotos" 
+          ref="fotos" :show-upload-button="false" class="p-button-outlined"
+          accept="image/*" :multiple="true" >
+          <template #empty>
+            <p> Seleccione las imagenes aqui </p>
+          </template>
+        </FileUpload>
       </div>
     </Form>
-  </Dialog>
+
+    <template #footer>
+      <div class="flex gap-2">
+        <Button 
+          label="Guardar" type="submit" 
+          form="form_modificar_agencia"
+          size="small" fluid />
+        <Button 
+          label="Cancelar" type="button"  
+          severity="danger" size="small"
+          @click="visibleModal = false" fluid />
+      </div>
+    </template>
+  </Drawer>
 </template>
 
 <script setup lang="ts">
-  import { ModificarAgencia, ObtenerAgencia } from '~/api/agencias';
+import { zodResolver } from '@primevue/forms/resolvers/zod';
+import { z } from 'zod';
+import { server } from '~/server/server';
 
-  interface Props { open: boolean, id: number }
-  const props = defineProps<Props>()
-  const emit = defineEmits(['hidden', 'refreshList', 'modified'])
-  const visibleModal = ref(props.open)
+interface Props { open: boolean, id: number }
+const props = defineProps<Props>()
+const emit = defineEmits(['hidden', 'refreshList', 'modified'])
+const visibleModal = ref(props.open)
 
-  const selectEstado = ref()
-  const Estados = ref([
-    { nombre: 'Activo', valor: true },
-    { nombre: 'Inactivo', valor: false },
-  ])
+const Departamentos = ref<any[]>([])
+const Encargados = ref<any[]>([])
 
-  const initialValues = reactive({
-    nombre: '',
-    direccion: '',
-    telefono: '',
-    correo_electronico: '',
-    estado: selectEstado,
+const selectEstado = ref()
+const Estados = ref([
+  { nombre: 'Activo', valor: true },
+  { nombre: 'Inactivo', valor: false },
+])
+
+const initialValues = reactive({
+  nombre: '', direccion: '',
+  telefono: '', correo: '',
+  descripcion: '', id_encargado: '',
+  id_departamento: '',
+  estado: "true",
+})
+
+onMounted( async () => {
+  obtenerAgencia(), obtenerDepartamentos(), obtenerEncargados()
+})
+
+async function obtenerDepartamentos(){
+  const res: any[] = await $fetch(server.HOST + '/api/v1/departamentos',{
+    method: 'GET'
   })
+  Departamentos.value = res
+}
 
-  onMounted( async () => {
-    funcObtenerAgencia()
+async function obtenerEncargados() {
+  // json ideal: nombre_completo - CI, id
+  const res: any[] = await $fetch(server.HOST + '/api/v1/usuarios', {
+    method: 'GET'
   })
+  Encargados.value = res
+}
 
-  watch(visibleModal, (newVal) => { if( !newVal ) { emit('hidden') } })
+watch(visibleModal, (newVal) => { 
+  if( !newVal ) emit('hidden') 
+})
 
-  async function funcObtenerAgencia() {
-    const response = await ObtenerAgencia(props.id)
-    initialValues.nombre = response.nombre
-    initialValues.direccion = response.direccion
-    initialValues.telefono = response.telefono
-    initialValues.correo_electronico = response.correo_electronico
-    selectEstado.value = response.estado
-  }
+async function obtenerAgencia() {
+  // code
+}
 
-  const onFormSubmit = async () => {
-    const response = await ModificarAgencia(initialValues, props.id)
-    if(response){
-      emit('modified')
-      emit('refreshList')
-      visibleModal.value = false
-    }
-  }
+const fotos = ref<any>(null)
 
+const getSchema = () => z.object({
+  nombre: z.string()
+    .min(3, { message: 'El nombre es requerido y debe tener al menos 3 caracteres.' }),
+
+  telefono: z.string()
+    .regex(/^\d{8}$/, { message: 'El teléfono debe tener exactamente 8 dígitos numéricos.' }),
+
+  correo: z.string()
+    .email({ message: 'Ingrese un correo electrónico válido.' }),
+
+  encargado: z.number({
+    required_error: 'Seleccione un encargado.',
+  }),
+
+  descripcion: z.string()
+    .min(10, { message: 'La descripción debe tener al menos 10 caracteres.' }),
+
+  departamento: z.number({
+    required_error: 'Seleccione un departamento.',
+  }),
+
+  direccion: z.string()
+    .min(5, { message: 'La dirección es requerida y debe tener al menos 5 caracteres.' }),
+})
+
+const resolver = computed( () => zodResolver(getSchema()))
+
+const onFormSubmit = async () => {
+  // code
+}
 </script>

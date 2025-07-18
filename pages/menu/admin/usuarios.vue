@@ -19,8 +19,11 @@
         </template>
         <Column field="id" header="#" />
         <Column field="nombre" header="Nombre" />
-        <Column field="apellido" header="Apellido" />
+        <Column field="apellido_paterno" header="Apellido Paterno" />
+        <Column field="apellido_materno" header="Apellido Materno" />
+        <Column field="ci" header="CI" />
         <Column field="correo" header="Correo Electronico" />
+        <Column field="telefono" header="Telefono" />
         <Column field="rol" header="Rol">
           <template #body="slotProps">
             <p class="text-center"> {{ slotProps.data.rol }}</p>

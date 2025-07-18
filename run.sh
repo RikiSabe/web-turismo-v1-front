@@ -11,7 +11,7 @@ trap cleanup SIGINT SIGTERM
 
 cd backend
 echo "Levantando el backend.."
-./backend_turismo &
+./backend_v2 -y &
 BACKEND_PID=$!
 echo "Backend en funcionamiento"
 cd ..
