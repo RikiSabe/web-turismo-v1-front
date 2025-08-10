@@ -52,6 +52,12 @@ async function obtenerDatosUsuario() {
     method: 'GET'
   })
   Usuario.nombre_completo = res.nombre_completo
-  Usuario.foto = (res.foto == "N/A" ? "public/images/profile.jpg" : res.foto)
+  const foto = res.foto
+  console.log(foto)
+  if(foto === "N/A"){
+    Usuario.foto = "/images/profile.jpg"
+  } else {
+    Usuario.foto = foto
+  }
 }
 </script>

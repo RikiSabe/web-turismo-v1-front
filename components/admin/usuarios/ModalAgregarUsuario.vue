@@ -153,15 +153,18 @@
       <p v-if="!src" class="text-center text-slate-500"> Seleccione una imagen para foto de perfil </p>
       <div class="card flex flex-col items-center gap-2 mb-2">
         <FileUpload
-          v-if="!src"
-          customUpload auto chooseLabel="Elegir Imagen"
+          v-if="!src" customUpload auto chooseLabel="Elegir Imagen"
           mode="basic" severity="secondary" class="p-button-outlined" accept="image/*"
           @select="onFileSelect" />
-        <img
-          v-if="src" :src="src" alt="Image"
-          class="shadow-md rounded-xl w-full sm:w-64" style="filter: grayscale(100%)" />
+
+        <span v-if="src" class="text-sm text-slate-500"> Imagen Seleccionada </span>
+        <img v-if="src" :src="src" alt="Image" class="shadow-md rounded-xl w-full sm:w-64" />
         <p v-else class="text-center text-slate-500"> No hay imagen seleccionada </p>
-        <Button v-if="src" label="Eliminar Imagen" severity="danger" variant="outlined" @click="src = null" />
+
+        <Button 
+          v-if="src" label="Eliminar Imagen" 
+          severity="danger" variant="outlined" 
+          @click="src = null" />
       </div>
     </Form>
 
@@ -181,6 +184,7 @@
 <script setup lang="ts">
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { z } from 'zod'
+
 import { server } from '~/server/server';
 
 interface Props { 
@@ -209,6 +213,7 @@ const Departamentos = ref<any[]>([]), id_departamento = ref()
 const Provincias = ref<any[]>([]), id_provincia = ref()
 const src = ref<any>(null)
 const maxDate = ref(new Date())
+const CorreosUsuarios = ref<any[]>([])
 
 watch(visibleModal, (newVal) => { 
   if( !newVal ) { emit('hidden') }
@@ -223,7 +228,16 @@ const initialValues = reactive({
 
 onMounted( async () => {
   await obtenerDepartamentos()
+  await ObtenerUsuarios()
 })
+
+async function ObtenerUsuarios(){
+  const res : any[] = await $fetch(server.HOST + '/api/v1/usuarios',{
+    method: 'GET'
+  })
+  CorreosUsuarios.value = res.map( item => ({ correo: item.correo }))
+  console.log(CorreosUsuarios.value)
+}
 
 async function obtenerDepartamentos(){
   const res: any[] = await $fetch(server.HOST + '/api/v1/departamentos')
@@ -257,7 +271,10 @@ const getSchema = () => z.object({
     .min(3, { message: 'El Apellido Paterno es requerido y debe tener al menos 3 caracteres.' }),
   
   correo: z.string()
-    .email({ message: 'Ingrese un correo electrónico válido.' }),
+    .email({ message: 'Ingrese un correo electrónico válido.' })
+    .refine( value => {
+      return !CorreosUsuarios.value.some(e => e.correo?.toLowerCase() === value.toLowerCase())
+    }, { message: 'Correo ya registrado, por favor utilice otro'} ),
 
   telefono: z.string()
     .regex(/^\d+$/, { message: 'El teléfono debe contener solo números.' })
@@ -286,6 +303,7 @@ const onFormSubmit = async ({valid} : any) => {
     try {
       const formData = new FormData()
       for (const [key, data] of Object.entries(initialValues)){
+        console.table(initialValues)
         if( key === "fecha_nacimiento") {
           formData.append(key, data.toISOString().split('T')[0])
         } else {

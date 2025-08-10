@@ -47,12 +47,16 @@
 
         <!-- Encargado nueva agencia -->
         <div class="flex flex-col gap-1">
-          <label for="encargado" class="text-sm text-slate-500"> Encargado de la Agencia</label>
+          <label for="encargado" class="text-sm text-slate-500"> Encargado de la Agencia (Solo se listaran los encargados)</label>
           <Select 
             id="encargado" name="encargado"
             placeholder="Seleccione el usuario que será encargado"
             v-model="initialValues.id_encargado" :options="Encargados"
-            option-label="nombre" option-value="id" checkmark size="small" />
+            option-label="nombre" option-value="id" checkmark size="small">
+            <template #empty>
+              <span> Sin encagados </span>
+            </template>
+          </Select>
           <Message v-if="$form.encargado?.invalid" severity="error" size="small" variant="simple">
             {{ $form.encargado.error.message }}
           </Message>
@@ -149,11 +153,12 @@ async function obtenerDepartamentos(){
 }
 
 async function obtenerEncargados() {
-  // json ideal: nombre_completo - CI, id
   const res: any[] = await $fetch(server.HOST + '/api/v1/usuarios', {
     method: 'GET'
   })
   Encargados.value = res
+    .filter( item => ( item.rol === "encargado de agencia"))
+    .map( item => ({ id: item.id , nombre: item.nombre + " " + item.apellido_paterno }))
 }
 
 watch(visibleNuevaAgencia, (newValue) => {

@@ -5,6 +5,7 @@
         <template #header>
           <div class="flex items-end justify-end gap-2">
             <InputText placeholder="Filtrar reserva..." size="small"/>
+            <Button label="Todos" variant="outlined" size="small" severity="info" />
             <Button label="Completados" variant="outlined" size="small" severity="success" />
             <Button label="Pendientes" variant="outlined" size="small" severity="warn" />
             <Button label="Cancelados" variant="outlined" size="small" severity="danger" />

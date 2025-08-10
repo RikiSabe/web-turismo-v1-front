@@ -163,7 +163,7 @@
           @select="onFileSelect" />
         <img
           v-if="src" :src="src" alt="Image"
-          class="shadow-md rounded-xl w-full sm:w-64" style="filter: grayscale(100%)" />
+          class="shadow-md rounded-xl w-full sm:w-64"/>
         <p v-else class="text-center text-slate-500"> No hay imagen seleccionada </p>
         <Button v-if="src" label="Eliminar Imagen" severity="danger" variant="outlined" @click="src = null" />
       </div>

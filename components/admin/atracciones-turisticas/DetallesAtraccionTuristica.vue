@@ -1,71 +1,119 @@
 <template>
-  <Dialog v-model:visible="visibleModal" modal header="Detalles Atraccion Turistica" :style="{ width: '30rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+  <Dialog 
+    v-model:visible="visibleModal" modal 
+    header="Detalles Atraccion Turistica" :style="{ width: '30rem' }" 
+    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" >
     <template #header>
       <p class="text-xl font-bold"> {{ state.nombre }}</p>
     </template>
-    <div class="flex justify-center rounded-lg pb-2">
-      <img alt="user header" src="/images/photo_turismo.jpg"/>
-    </div>
-    <Panel>
-      <div class="grid grid-cols-2">
+    <Carousel
+      :value="Fotos" :numVisible="1" :numScroll="1" :showNavigators="false"
+      circular :autoplayInterval="3000">
+      <template #item="slotProps">
+        <div class="rounded">
+          <div class="relative mx-auto">
+            <img 
+              :src="slotProps.data.foto" :alt="slotProps.data.name"
+              class="w-full h-96 rounded contain-content" />
+          </div>
+        </div>
+      </template>
+    </Carousel>
+    <Fieldset legend="Detalles de la atracción turistica">
+      <div class="grid grid-cols-4 gap-2">
         <!-- Tipo -->
-        <div>
-          <p class="text-center text-sm"><strong>Tipo</strong></p>
-          <p class="text-center text-sm"> {{ state.tipo }} </p>
+        <div class="ring-1 ring-slate-200 rounded-sm">
+          <p class="text-center text-sm p-1"><strong> Tipo </strong></p>
+          <p class="text-center text-sm p-2"> {{ state.tipo }} </p>
         </div>
         <!-- Precio -->
-        <div>
-          <p class="text-center text-sm"><strong> Precio </strong></p>
-          <p class="text-center text-sm"> {{ state.precio }} bs </p>
+        <div class="ring-1 ring-slate-200 rounded-sm">
+          <p class="text-center text-sm p-1"><strong> Precio </strong></p>
+          <p class="text-center text-sm p-2"> {{ state.precio }} bs </p>
+        </div>
+        <!-- Horario Apertura -->
+        <div class="ring-1 ring-slate-200 rounded-sm">
+          <p class="text-center text-sm p-1"><strong> Horario de Apertura </strong></p>
+          <p class="text-center text-sm p-2"> {{ state.horario_apertura }} </p>
+        </div>
+        <!-- Horario Cierre -->
+        <div class="ring-1 ring-slate-200 rounded-sm">
+          <p class="text-center text-sm p-1"><strong> Horario de Cierre </strong></p>
+          <p class="text-center text-sm p-2"> {{ state.horario_cierre }} </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-4 mt-2 gap-2">
+        <!-- Departamento -->
+        <div class="ring-1 ring-slate-200 rounded-sm">
+          <p class="text-center text-sm p-1"><strong> Departamento </strong></p>
+          <p class="text-center text-sm p-2"> {{ state.departamento }} </p>
+        </div>
+        <!-- Provincia -->
+        <div class="ring-1 ring-slate-200 rounded-sm">
+          <p class="text-center text-sm p-1"><strong> Provincia </strong></p>
+          <p class="text-center text-sm p-2"> {{ state.provincia }} </p>
         </div>
         <!-- Direccion -->
-        <div>
-          <p class="text-center text-sm"><strong> Direccion </strong></p>
-          <p class="text-center text-sm"> {{ state.ubicacion }} </p>
-        </div>
-        <!-- Horarios -->
-        <div>
-          <p class="text-center text-sm"><strong> Horarios </strong></p>
-          <p class="text-center text-sm"> {{ state.horarios }} </p>
+        <div class="ring-1 ring-slate-200 rounded-sm col-span-2">
+          <p class="text-center text-sm p-1"><strong> Lugar </strong></p>
+          <p class="text-center text-sm p-2"> {{ state.direccion }} </p>
         </div>
       </div>
+
       <div>
-        <p class="text-center text-sm"><strong> Descripcion </strong></p>
-        <p class="text-center text-sm"> {{ state.descripcion }} </p>
+        <div class="ring-1 ring-slate-200 rounded-sm col-span-2 mt-2">
+          <p class="text-sm p-1 ml-2"><strong> Descripción </strong></p>
+          <p class="text-sm p-1 ml-2"> {{ state.descripcion }} </p>
+        </div>
       </div>
-    </Panel>
+    </Fieldset>
   </Dialog>
 </template>
 
 <script setup lang="ts">
-  import { ObtenerAtraccionTuristica } from '~/api/atracciones-turisticas'
-  interface Props { open: boolean, id: number }
-  const props = defineProps<Props>()
-  const emit = defineEmits(['hidden'])
-  const visibleModal = ref(props.open)
-  watch(visibleModal, (newVal) => { if( !newVal ) { emit('hidden') } })
+import { server } from '~/server/server';
 
-  const state = reactive({
-    tipo: '',
-    nombre: '',
-    ubicacion: '',
-    descripcion: '',
-    horarios: '',
-    precio: ''
+interface Props { open: boolean, id: number }
+const props = defineProps<Props>()
+const emit = defineEmits(['hidden'])
+const visibleModal = ref(props.open)
+const Fotos = ref<any[]>([])
+
+watch(visibleModal, (newVal) => { if( !newVal ) { emit('hidden') } })
+
+const state = reactive({
+  nombre: 'Cargando nombre de la atracción turistica',
+  tipo: 'cargando tipo',
+  horario_apertura: 'cargando horario de apertura',
+  horario_cierre: 'cargando horario de cierre',
+  precio: 'cargando precio en',
+  direccion: 'cargando dirección',
+  departamento: 'cargando departamento',
+  provincia: 'cargando privincia',
+  descripcion: 'cargando descripción'
+})
+
+onMounted( async() => {
+  await funcObtenerAtraccionTuristica()
+})
+
+async function funcObtenerAtraccionTuristica() {
+  const res: any = await $fetch(server.HOST + '/api/v2/atracciones-turisticas/' + props.id, {
+    method: 'GET'
   })
-
-  onMounted( async() => {
-    await funcObtenerAtraccionTuristica()
-  })
-
-  async function funcObtenerAtraccionTuristica() {
-    const response = await ObtenerAtraccionTuristica(props.id)
-    state.tipo = response.tipo
-    state.nombre = response.nombre
-    state.ubicacion = response.ubicacion
-    state.descripcion = response.descripcion
-    state.horarios = response.horarios
-    state.precio = response.precio
-  }
+  // Datos
+  state.tipo = res.categoria
+  state.nombre = res.nombre
+  state.direccion = res.direccion
+  state.descripcion = res.descripcion
+  state.horario_apertura = res.horario_apertura
+  state.horario_cierre = res.horario_cierre
+  state.precio = res.precio
+  state.departamento = res.ubicacion.departamento.nombre
+  state.provincia = res.ubicacion.provincia.nombre
+  // Fotos
+  Fotos.value = res.fotos.sort((a: any, b: any) => a.orden - b.orden )
+}
 
 </script>

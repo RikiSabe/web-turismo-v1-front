@@ -1,7 +1,7 @@
 <template>
   <Toast />
   <Fieldset legend="Atracciones Turisticas">
-    <div class="grid grid-cols-4 gap-2">
+    <div class="grid grid-cols-3 gap-2">
       <Card v-for="at in AtraccionesTuristicas" :key="at.id" style="overflow: hidden;">
         <template #header>
           <img alt="user header" src="/images/photo_turismo.jpg"/>
@@ -39,38 +39,44 @@
               <p class="text-sm"> {{ at.descripcion }} </p>
             </div>
           </ScrollPanel>
-          <!-- <Divider /> -->
         </template>
-        <!-- <template #footer>
-          <Button type="button" label="Reservar" fluid @click="registroNecesario"/>
-        </template> -->
       </Card>
     </div>
   </Fieldset>
 </template>
 
 <script setup lang="ts">
-  import { ObtenerAtraccionesTuristicas } from '~/api/atracciones-turisticas'
-  
-  definePageMeta({ layout : 'menu-turista' })
-  const AtraccionesTuristicas = ref<any>([])
-  const toast = useToast()
-  onMounted( async () => {
-    funcAtraccionesTuristicas()
-  })
+import { ObtenerAtraccionesTuristicas } from '~/api/atracciones-turisticas'
 
-  async function funcAtraccionesTuristicas() {
-    const response = await ObtenerAtraccionesTuristicas()
-    AtraccionesTuristicas.value = response
+definePageMeta({ layout : 'menu-turista' })
+const AtraccionesTuristicas = ref<any>([
+  {
+    "id": 1,
+    "nombre": "Mirador de los Sueños",
+    "tipo": "Paisaje Natural",
+    "precio": 30,
+    "ubicacion": "Barrio San Jorge, Tarija",
+    "horarios": "08:00 - 18:00",
+    "descripcion": "Un mirador panorámico que ofrece vistas espectaculares de la ciudad de Tarija y sus alrededores. Ideal para fotos al atardecer."
+  },
+  {
+    "id": 2,
+    "nombre": "Casa Dorada",
+    "tipo": "Patrimonio Histórico",
+    "precio": 20,
+    "ubicacion": "Calle General Trigo, esquina Suipacha, Tarija",
+    "horarios": "09:00 - 17:00",
+    "descripcion": "Antigua casona colonial con arquitectura única. Actualmente funciona como museo y centro cultural. Muy visitado por turistas e historiadores."
   }
+])
 
-  const registroNecesario= () => {
-    toast.add({
-      summary: 'Registro Necesario', 
-      detail: 'Debe estar Registrado para poder reservar esta atraccion turistica',
-      severity: 'warn',
-      life: 3000,
-    })
-  }
+onMounted( async () => {
+  // funcAtraccionesTuristicas()
+})
+
+async function funcAtraccionesTuristicas() {
+  const response = await ObtenerAtraccionesTuristicas()
+  AtraccionesTuristicas.value = response
+}
 
 </script>

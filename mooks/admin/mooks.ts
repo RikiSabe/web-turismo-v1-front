@@ -94,62 +94,34 @@ export const mookUsuarios: Usuario[] = [
   }
 ]
 
-interface AtraccionTuristica {
-  codigo: number;
-  tipo: string;
-  nombre: string;
-  precio: number;
-  horario: string;
-  ubicacion: string;
-}
+export const mookAtraccionesTuristicas: any[] = [
+  {
+    id: 1,
+    categoria: 'Culturales',
+    nombre: 'Atraccion Turistica N1',
+    descripcion: 'sin descripcion',
+    horario_apertura: '08:00 am',
+    horario_cierre: '06:00 pm',
+    precio: 150,
+    estado: true,
+    encargado: {
+      id: 1,
+      nombre_completo: 'Juan Perez'
+    }
+  }
+]
 
-export const mookAtraccionesTuristicas: AtraccionTuristica[] = [
+export const mookFotosAtraccionTuristica: any[] = [
   {
-    codigo: 1,
-    tipo: 'Cultural',
-    nombre: 'Casa Dorada',
-    precio: 15,
-    horario: 'Lunes a Sábado, 9:00 - 17:00',
-    ubicacion: 'Calle Sucre esquina Ingavi, centro de Tarija'
+    name: 'foto1',
+    src: '/images/iglesia-perpetuo-socorro.jpg',
   },
   {
-    codigo: 2,
-    tipo: 'Religiosa',
-    nombre: 'Catedral San Bernardo',
-    precio: 0,
-    horario: 'Todos los días, 7:00 - 20:00',
-    ubicacion: 'Plaza Luis de Fuentes y Vargas, Tarija'
+    name: 'foto2',
+    src: '/images/photo_turismo.jpg',
   },
   {
-    codigo: 3,
-    tipo: 'Natural',
-    nombre: 'Cañón de los Gatos',
-    precio: 25,
-    horario: 'Todos los días, 8:00 - 18:00',
-    ubicacion: 'Zona de Tomatitas, 20 min del centro de Tarija'
-  },
-  {
-    codigo: 4,
-    tipo: 'Cultural',
-    nombre: 'Museo Paleontológico de Tarija',
-    precio: 20,
-    horario: 'Martes a Domingo, 9:00 - 16:00',
-    ubicacion: 'Barrio El Molino, calle Suipacha, Tarija'
-  },
-  {
-    codigo: 5,
-    tipo: 'Gastronómica',
-    nombre: 'Ruta del Vino y Singani',
-    precio: 80,
-    horario: 'Lunes a Sábado, 10:00 - 18:00',
-    ubicacion: 'Valle de la Concepción y alrededores de Tarija'
-  },
-  {
-    codigo: 6,
-    tipo: 'Natural',
-    nombre: 'Chorros de Jurina',
-    precio: 30,
-    horario: 'Todos los días, 7:00 - 17:00',
-    ubicacion: 'Zona de San Lorenzo, 40 min de Tarija'
+    name: 'foto3',
+    src: '/images/salon-eventos.jpeg',
   }
 ]

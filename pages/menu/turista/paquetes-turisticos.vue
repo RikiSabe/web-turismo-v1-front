@@ -51,21 +51,20 @@
 </template>
 
 <script lang="ts" setup>
-  import DetallesPaqueteTuristico from '~/components/turista/paquetes-turisticos/DetallesPaqueteTuristico.vue'
-  import { server } from '~/server/server'
-  definePageMeta({ layout: 'menu-turista' })
+import DetallesPaqueteTuristico from '~/components/turista/paquetes-turisticos/DetallesPaqueteTuristico.vue'
+definePageMeta({ layout: 'menu-turista' })
 
-  const VisibleDetallesPaqueteTuristico = ref(false)
-  const idPaqueteTuristico = ref(0)
-  const paquetesTuristicos = ref<any[]>([])
+const VisibleDetallesPaqueteTuristico = ref(false)
+const idPaqueteTuristico = ref(0)
+const paquetesTuristicos = ref<any[]>([])
 
-  onMounted( async () => {
-    const response: any[] = await $fetch(server.HOST + '/api/v1/paquetes-turisticos')
-    paquetesTuristicos.value = response
-  })
+onMounted( async () => {
+  // const response: any[] = await $fetch(server.HOST + '/api/v1/paquetes-turisticos')
+  // paquetesTuristicos.value = response
+})
 
-  const funcDetallesPaqueteTuristico = (id: number)  => {
-    idPaqueteTuristico.value = id
-    VisibleDetallesPaqueteTuristico.value = true
-  }
+const funcDetallesPaqueteTuristico = (id: number)  => {
+  idPaqueteTuristico.value = id
+  VisibleDetallesPaqueteTuristico.value = true
+}
 </script>
