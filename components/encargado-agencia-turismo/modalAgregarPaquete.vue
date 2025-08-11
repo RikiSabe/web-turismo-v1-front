@@ -130,7 +130,7 @@ interface Props{ open: boolean }
 
 const props = defineProps<Props>()
 const visibleModalAgregarPaquete = ref(props.open)
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'update', 'success'])
 const atraccionesOptions = ref<any[]>([])
 const DuracionesPaquete = ref([
   "1 hora", 
@@ -164,7 +164,7 @@ const initialValues = reactive({
 
 onMounted( async () => {
   try {
-    const res: any = await $fetch( server.HOST + '/api/v1/atracciones-turisticas')
+    const res: any = await $fetch( server.HOST + '/api/v2/atracciones-turisticas')
     atraccionesOptions.value = res.map((item: any) => ({ id: item.id, nombre: item.nombre }))
   } catch (error) {
     console.error('Error al cargar las atracciones turísticas:', error)
@@ -184,6 +184,7 @@ const handleGuardarPaquete = async () => {
     visibleModalAgregarPaquete.value = false
     initialValues.id_atracciones = []
     initialValues.fecha = null
+    emit('success'), emit('update')
   } catch (error) {
     console.error('Error al guardar el paquete turístico:', error)
   }

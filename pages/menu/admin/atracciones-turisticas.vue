@@ -121,7 +121,15 @@
     <ModalAgregarAtraccionTuristica 
       :open="visibleNuevaAtraccionTuristica"
       v-if="visibleNuevaAtraccionTuristica"
-      @close="visibleNuevaAtraccionTuristica = false"/>
+      @close="visibleNuevaAtraccionTuristica = false"
+      @update="ObtenerAtraccionesTuristicas()"
+      @success="toast.add({
+        severity: 'success', 
+        summary: 'Atraccion agregado', 
+        detail: 'La atraccion turistica se agregó correctamente.', 
+        life: 3000 })"
+      />
+      
   </div>
 </template>
 
@@ -132,6 +140,7 @@ import DetallesAtraccionTuristica from '~/components/admin/atracciones-turistica
 import ModalDetallesEncargado from '~/components/admin/atracciones-turisticas/ModalDetallesEncargado.vue'
 import { nombreEstado, colorEstado } from '~/utils/utils'
 import { server } from '~/server/server'
+import { ObtenerAtraccionesTuristicas } from '~/api/atracciones-turisticas'
 
 definePageMeta({ layout: 'menu-admin' })
 

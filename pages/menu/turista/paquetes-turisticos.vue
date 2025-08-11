@@ -6,7 +6,10 @@
     </div>
 
     <div class="grid grid-cols-4 gap-2 p-2">
-      <Card v-for="paquete in paquetesTuristicos" :key="paquete.nombre" style="overflow: hidden;">
+      <Card 
+        v-for="paquete in paquetesTuristicos" 
+        :key="paquete.nombre" 
+        style="overflow: hidden;">
         <template #header>
           <img alt="user header" src="/images/photo_turismo.jpg"/>
         </template>
@@ -26,7 +29,9 @@
             <i class="pi pi-clock" />
             <p> {{ paquete.duracion }} </p>
           </div>
-          <Tag v-for="at in paquete.atracciones_turisticas" severity="success" :value="at.nombre" />
+          <Tag 
+            v-for="at in paquete.atracciones_turisticas" 
+            severity="success" :value="at.nombre" />
           <div class="flex justify-between gap-2">
             <div class="flex items-center gap-2">
               <i class="pi pi-dollar text-green-500" />
@@ -36,7 +41,10 @@
         </template>
         <template #footer>
           <div class="flex justify-end">
-            <Button label="Ver detalles" @click="funcDetallesPaqueteTuristico(paquete.id)" variant="outlined" />
+            <Button 
+              label="Ver detalles" 
+              @click="funcDetallesPaqueteTuristico(paquete.id)" 
+              variant="outlined" />
           </div>
         </template>
       </Card>
@@ -45,13 +53,14 @@
       :id="idPaqueteTuristico"
       :open="VisibleDetallesPaqueteTuristico"
       v-if="VisibleDetallesPaqueteTuristico"
-      @hidden="VisibleDetallesPaqueteTuristico = false"
-    />
+      @hidden="VisibleDetallesPaqueteTuristico = false" />
+
   </div>
 </template>
 
 <script lang="ts" setup>
 import DetallesPaqueteTuristico from '~/components/turista/paquetes-turisticos/DetallesPaqueteTuristico.vue'
+import { server } from '~/server/server'
 definePageMeta({ layout: 'menu-turista' })
 
 const VisibleDetallesPaqueteTuristico = ref(false)
@@ -59,8 +68,10 @@ const idPaqueteTuristico = ref(0)
 const paquetesTuristicos = ref<any[]>([])
 
 onMounted( async () => {
-  // const response: any[] = await $fetch(server.HOST + '/api/v1/paquetes-turisticos')
-  // paquetesTuristicos.value = response
+  const response: any[] = await $fetch(server.HOST + '/api/v1/paquetes-turisticos', {
+    method: 'GET'
+  })
+  paquetesTuristicos.value = response
 })
 
 const funcDetallesPaqueteTuristico = (id: number)  => {

@@ -1,4 +1,5 @@
 <template>
+  <Toast />
   <div class="p-2">
     <Fieldset legend="Paquetes Turisticos">
       <DataTable 
@@ -48,19 +49,27 @@
   <ModalAgregarPaquete 
     :open="visibleModalAgregarPaquete"
     v-if="visibleModalAgregarPaquete"
-    @close="visibleModalAgregarPaquete = false"/>
+    @close="visibleModalAgregarPaquete = false"
+    @update="cargarPaquetes"
+    @success="toast.add({
+      severity: 'success',
+      summary: 'Paquete Agregado',
+      detail: 'Paquete Agregado Correctamente', 
+      life: 3000 })"
+    />
 </template>
 
 <script lang="ts" setup>
 import { server } from '~/server/server'
 import ModalAgregarPaquete from '~/components/encargado-agencia-turismo/modalAgregarPaquete.vue'
 import { mookPaquetesTuristicos } from '~/mooks/paquetes-turisticos/mooks'
-import { Badge } from 'primevue'
 
 definePageMeta({ layout: 'menu-encargado-agencia-turismo' })
 
 const visibleModalAgregarPaquete = ref(false)
-const Paquetes = ref<any[]>(mookPaquetesTuristicos)
+// const Paquetes = ref<any[]>(mookPaquetesTuristicos)
+const Paquetes = ref<any[]>([])
+const toast = useToast()
 
 onMounted( async () => {
   await cargarPaquetes()

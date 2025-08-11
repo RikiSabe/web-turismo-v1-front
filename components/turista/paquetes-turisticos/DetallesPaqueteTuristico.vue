@@ -33,18 +33,34 @@
         </div>
       </div>
 
-      <div class="p-6 bg-white">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="p-2">
+        <div>
           <div>
-            <h3 class="text-xl font-semibold mb-3 text-gray-800"> Descripción del Paquete </h3>
-            <p class="text-gray-600 leading-relaxed"> {{ Paquete.descripcion }} </p>
-            <div class="flex items-center">
-              <Timeline :value="Paquete.atracciones" class="w-full">
+            <div class="flex flex-col items-center justify-center">
+                <span class="text-xl font-semibold text-gray-800"> Descripción del Paquete </span>
+                <p class="text-gray-600 leading-relaxed mb-2"> {{ Paquete.descripcion }} </p>
+            </div>
+            
+            <div class="ring-1 ring-slate-200 rounded-sm m-2 p-2">
+              <Timeline :value="Paquete.atracciones" align="alternate">
+                <template #marker>
+                  <span class="flex w-8 h-8 items-center justify-center text-white rounded-full z-10 shadow-sm" :style="{ backgroundColor: 'salmon' }">
+                      <i class="pi pi-heart-fill"></i>
+                  </span>
+                </template>
                 <template #opposite="slotProps">
-                    <small class="text-surface-500"> {{ slotProps.item.horarios }}</small>
+                  <div>
+                    <span> Horarios </span>
+                  </div>
+                  <div>
+                    {{ slotProps.item.horario_apertura }} - {{ slotProps.item.horario_cierre }}
+                  </div>
                 </template>
                 <template #content="slotProps">
-                  {{ slotProps.item.nombre }} , {{ slotProps.item.descripcion }}
+                  <div class="flex flex-col items-center">
+                    <img :alt="slotProps.item.nombre" src="/public/images/photo_turismo.jpg" class="h-40 w-64 rounded-lg" />
+                    <span> {{ slotProps.item.nombre }} , {{ slotProps.item.descripcion }} </span>
+                  </div>
                 </template>
               </Timeline>
             </div>
@@ -62,57 +78,59 @@
 </template>
 
 <script lang="ts" setup>
-  import { server } from '~/server/server';
-  interface Props {
-    open: boolean;
-    id: number;
+import { server } from '~/server/server';
+interface Props {
+  open: boolean;
+  id: number;
+}
+const props = defineProps<Props>();
+const emit = defineEmits(["hidden"]);
+const visible = ref<boolean>(props.open);
+watch(visible, (newVal) => { if( !newVal ) { emit('hidden') } })
+
+const Paquete = reactive({
+  id: 0,
+  nombre: '',
+  descripcion: '',
+  precio: 0,
+  categoria: '',
+  atracciones: [] as any[],
+})
+
+onMounted( async () => {
+  try {
+    const res: any = await $fetch(server.HOST + '/api/v1/paquetes-turisticos/' + props.id, {
+      method: 'GET'
+    })
+    Paquete.id = res.id;
+    Paquete.nombre = res.nombre;
+    Paquete.descripcion = res.descripcion;
+    Paquete.precio = res.precio;
+    Paquete.categoria = res.categoria;
+    Paquete.atracciones = res.atracciones_turisticas || [];
+    console.log("Paquete turístico cargado:", JSON.stringify(Paquete, null, 2));
+  } catch (error) {
+    console.error("Error al cargar el paquete turístico:", error)
   }
-  const props = defineProps<Props>();
-  const emit = defineEmits(["hidden"]);
-  const visible = ref<boolean>(props.open);
-  watch(visible, (newVal) => { if( !newVal ) { emit('hidden') } })
+})
 
-  const Paquete = reactive({
-    id: 0,
-    nombre: '',
-    descripcion: '',
-    precio: 0,
-    categoria: '',
-    atracciones: [] as any[],
-  })
-
-  onMounted( async () => {
-    try {
-      const res: any = await $fetch(server.HOST + '/api/v1/paquetes-turisticos/' + props.id)
-      Paquete.id = res.id;
-      Paquete.nombre = res.nombre;
-      Paquete.descripcion = res.descripcion;
-      Paquete.precio = res.precio;
-      Paquete.categoria = res.categoria;
-      Paquete.atracciones = res.atracciones_turisticas || [];
-      console.log("Paquete turístico cargado:", JSON.stringify(Paquete, null, 2));
-    } catch (error) {
-      console.error("Error al cargar el paquete turístico:", error)
-    }
-  })
-
-  const handleReservation = async () => {
-    console.log("Procesando reserva...");
-    try {
-      const res = await $fetch(server.HOST + '/api/v1/reservas/1', {
-        method: 'POST',
-        body: {
-          id_paquete: Paquete.id,
-          id_usuario: localStorage.getItem('id'),
-          fecha: new Date().toISOString(),
-          numero_personas: 1,
-          descripcion: `Reserva del paquete turístico ${Paquete.nombre}`,
-          estado: true,
-        }
-      })
-      visible.value = false;
-    } catch (error) {
-      console.error("Error al procesar la reserva:", error);
-    }   
-  }
+const handleReservation = async () => {
+  console.log("Procesando reserva...");
+  try {
+    await $fetch(server.HOST + '/api/v1/reservas/1', {
+      method: 'POST',
+      body: {
+        id_paquete: Paquete.id,
+        id_usuario: localStorage.getItem('id'),
+        fecha: new Date().toISOString(),
+        numero_personas: 1,
+        descripcion: `Reserva del paquete turístico ${Paquete.nombre}`,
+        estado: true,
+      }
+    })
+    visible.value = false;
+  } catch (error) {
+    console.error("Error al procesar la reserva:", error);
+  }   
+}
 </script>
