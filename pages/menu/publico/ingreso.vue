@@ -83,14 +83,35 @@ async function handleIngreso({valid} : any) {
       })
       sessionStorage.setItem('id', res.id)
       sessionStorage.setItem('rol', res.rol)
-      if ( res.rol === 'admin' ) {
-        route.push('/menu/admin/usuarios')
-      } else if ( res.rol === 'turista') {
-        route.push('/menu/turista/inicio')
-      } else if ( res.rol === 'encargado turismo'){
-        route.push('/menu/encargado-agencia-turismo/paquetes')
+      
+      switch (res.rol) {
+        case 'admin':
+          route.push('/menu/admin/usuarios');
+          break;
+
+        case 'turista':
+          route.push('/menu/turista/inicio');
+          break;
+
+        case 'encargado de agencia':
+          route.push('/menu/encargado-agencia-turismo/paquetes');
+          break;
+
+        case 'encargado de turismo':
+          route.push('/menu/encargado-atracciones-turisticas/atracciones-turisticas');
+          break;
+
+        default:
+          toast.add({
+            severity: 'error',
+            summary: 'Inicio de Sesion',
+            detail: 'Error al iniciar sesion.',
+            life: 3000
+          })
+          break;
       }
-    } catch ( e ){
+
+    } catch ( e ) {
       console.error('Error al iniciar sesión:', e)
       toast.add({ 
         severity: 'error', 

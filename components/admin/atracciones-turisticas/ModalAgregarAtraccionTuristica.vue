@@ -245,6 +245,8 @@ const Provincias = ref<any[]>([]), id_ubicacion = ref()
 const fotos = ref<any>(null)
 const $primevue = usePrimeVue()
 
+const AtraccionesExistentes = ref<any[]>([])
+
 const initialValues = reactive({
   id_encargado: id_encargado,
   id_ubicacion: id_ubicacion,
@@ -268,7 +270,21 @@ onMounted( async () => {
   const cierregeneral = new Date()
   cierregeneral.setHours(20,0,0,0)
   selectHorarioCierre.value = new Date(cierregeneral)
+  await ObtenerAtraccionesExistentes()
 })
+
+async function ObtenerAtraccionesExistentes(){
+  const res: any[] = await $fetch(server.HOST + '/api/v1/atracciones-turisticas/existentes', {
+    method: 'GET'
+  })
+  AtraccionesExistentes.value = res.map( (item) => {
+    return {
+      ...item,
+      nombre: item.nombre.replace(/\s+/g, ' ').trim()
+    }
+  })
+  console.log(JSON.stringify(AtraccionesExistentes, null,2))
+}
 
 async function obtenerEncargados(){
   const res: any[] = await $fetch(server.HOST + '/api/v1/usuarios', {
@@ -368,7 +384,12 @@ const formatSize = (bytes : any) => {
 
 const getSchema = () => z.object({
   nombre: z.string()
-    .min(3, { message: 'El nombre es requerido y debe tener al menos 3 caracteres.' }),
+    .min(3, { message: 'El nombre es requerido y debe tener al menos 3 caracteres.' })
+    .refine( 
+      value => {
+        return !AtraccionesExistentes.value.some(e => e.nombre?.toLowerCase() === value.toLowerCase())
+      }, { message: 'Atraccion Turistica ya registrada, por favor utilice otro nombre'} 
+    ),
 
   tipo: z.string()
     .refine(val => TiposAtracciones.value.includes(val), { message: 'Seleccione un tipo valido.'}),

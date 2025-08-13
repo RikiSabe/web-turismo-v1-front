@@ -87,6 +87,7 @@ const props = defineProps<Props>();
 const emit = defineEmits(["hidden"]);
 const visible = ref<boolean>(props.open);
 watch(visible, (newVal) => { if( !newVal ) { emit('hidden') } })
+const id_usuario = ref<number>(0)
 
 const Paquete = reactive({
   id: 0,
@@ -98,6 +99,7 @@ const Paquete = reactive({
 })
 
 onMounted( async () => {
+  id_usuario.value = Number(sessionStorage.getItem('id'))
   try {
     const res: any = await $fetch(server.HOST + '/api/v1/paquetes-turisticos/' + props.id, {
       method: 'GET'
@@ -116,15 +118,19 @@ onMounted( async () => {
 
 const handleReservation = async () => {
   console.log("Procesando reserva...");
+  if( !id_usuario ) {
+    console.log("sin id de usuario")
+    return
+  }
   try {
-    await $fetch(server.HOST + '/api/v1/reservas/1', {
+    await $fetch(server.HOST + '/api/v1/reservas', {
       method: 'POST',
       body: {
         id_paquete: Paquete.id,
-        id_usuario: localStorage.getItem('id'),
-        fecha: new Date().toISOString(),
+        id_usuario: id_usuario.value,
+        fecha: new Date(),
         numero_personas: 1,
-        descripcion: `Reserva del paquete turístico ${Paquete.nombre}`,
+        descripcion: `Reserva del paquete turístico ${Paquete.nombre} para 1 persona`,
         estado: true,
       }
     })

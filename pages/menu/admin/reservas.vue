@@ -1,7 +1,10 @@
 <template>
   <div class="p-2">
     <Fieldset legend="Gestión de Reservas">
-      <DataTable :value="Reservas" showGridlines paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]">
+      <DataTable 
+        :value="Reservas" showGridlines 
+        paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
+        size="small" >
         <template #header>
           <div class="flex items-end justify-end gap-2">
             <InputText placeholder="Filtrar reserva..." size="small"/>
@@ -19,30 +22,43 @@
             </div>
           </div>
         </template>
-        <Column field="id" header="#" />
+        <Column header="#">
+          <template #body="slotProps">
+            <span> {{ slotProps.data.id }} </span>
+          </template>
+        </Column>
         <Column header="Paquete">
           <template #body="slotProps">
             <div class="flex items-center justify-between">
-              <p> {{ slotProps.data.paquete.nombre }} </p>
+              <span> {{ slotProps.data.nombre_paquete }} </span>
               <Button icon="pi pi-eye" size="small" variant="text"/>
             </div>
           </template>
         </Column>
         <Column header="Reservado por">
           <template #body="slotProps">
-            <p> {{ slotProps.data.usuario.nombre }} </p>
+            <span> {{ slotProps.data.nombre_usuario }} </span>
           </template>
         </Column>
-        <Column field="fecha" header="Fecha de reserva" />
+        <Column header="Fecha de reserva">
+          <template #body="slotProps">
+            <span> {{ slotProps.data.fecha }} </span>
+          </template>
+        </Column>
         <Column header="Promoción">
           <template #body="slotProps">
             <div class="flex items-center justify-between">
-              <p> {{ slotProps.data.promocion.nombre }} </p>
-              <Button icon="pi pi-eye" variant="text" size="small"/>
+              <div v-if="slotProps.data.procion">
+                <p> {{ slotProps.data.promocion.nombre }} </p>
+                <Button icon="pi pi-eye" variant="text" size="small"/>
+              </div>
+              <div v-else>
+                Sin promociones
+              </div>
             </div>
           </template>
         </Column>
-        <Column header="#">
+        <Column header="# de personas">
           <template #body="slotProps">
             <p v-if="slotProps.data.numero_personas > 1"> {{ slotProps.data.numero_personas }} personas </p>
             <p v-if="slotProps.data.numero_personas == 1"> {{ slotProps.data.numero_personas }} persona </p>
@@ -55,39 +71,48 @@
         </Column>
         <Column header="Acciones" >
           <template #body="slotProps">
-            <Button label="decidir" size="small" variant="outlined"/>
+            <Button 
+              label="decidir" size="small" 
+              variant="outlined"
+              @click="openDecidirReserva(slotProps.data.id)"/>
           </template>
         </Column>
       </DataTable>
     </Fieldset>
   </div>
+
+  <ModalDecidirReserva 
+    :id="id_reserva" 
+    :open="Visible"
+    v-if="Visible"
+    @close="Visible = false"
+    @update="obtenerReservas()" />
 </template>
 
 <script setup lang="ts">
+import { server } from '~/server/server'
+import ModalDecidirReserva from '~/components/admin/reservas/ModalDecidirReserva.vue'
+
 definePageMeta({ layout: 'menu-admin'}) 
 
 const Reservas = ref<any[]>([])
+const Visible = ref(false)
+const id_reserva = ref(0)
 
 onMounted( async () => {
-  Reservas.value = [
-    {
-      id: 1,
-      paquete: {
-        id: 1,
-        nombre: "Paquete 1",
-      },
-      usuario: {
-        id: 2,
-        nombre: "Ricardo Campos",
-      },
-      fecha: '13-07-2025',
-      promocion: {
-        id: 10,
-        nombre: "Promocion clasica"
-      }, 
-      numero_personas: 2,
-      estado: 'Pendiente',
-    }
-  ]
+  await obtenerReservas()
 })
+
+const obtenerReservas = async () => {
+  const res: any[] = await $fetch(server.HOST + '/api/v1/reservas',{
+    method: 'GET'
+  })
+  Reservas.value = res
+  console.log(Reservas.value)
+}
+
+const openDecidirReserva = (id: any) => {
+  Visible.value = true
+  id_reserva.value = id
+}
 </script>

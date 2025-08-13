@@ -168,9 +168,12 @@ watch(visibleNuevaAgencia, (newValue) => {
 })
 
 const initialValues = reactive({
-  nombre: '', direccion: '',
-  telefono: '', correo: '',
-  descripcion: '', id_encargado: '',
+  nombre: '', 
+  direccion: '',
+  telefono: '', 
+  correo: '',
+  descripcion: '', 
+  id_encargado: '',
   id_departamento: '',
   estado: "true",
 })
@@ -205,28 +208,23 @@ const getSchema = () => z.object({
 const resolver = computed( () => zodResolver(getSchema()))
 
 const onFormSubmit = async ( {valid} : any ) => {
-  // const archivos = fotos.value?.files || []
-  // const formData = new FormData()
+  const formData = new FormData()
 
-  // try {
-  //   for(const [key, data] of Object.entries(initialValues)){
-  //     formData.append(key, data)
-  //   }
-  //   if( archivos.length == 0 ){
-  //     formData.append('fotos[]', "N/A")
-  //   } else {
-  //     for(const foto of archivos) {
-  //       formData.append('fotos[]', foto)
-  //     }
-  //   }
-  //   await $fetch( '/api/v2/agencias', {
-  //     method: 'POST',
-  //     body: formData
-  //   })
-  //   emit('hidden'), emit('addedCorrect'), emit('refreshList')
-  // } catch(err) {
-  //   console.error(err)
-  //   emit('addedFail')
-  // }
+  if( valid ){
+    try {
+      for(const [key, data] of Object.entries(initialValues)){
+        formData.append(key, data)
+        console.log(key, data)
+      }
+      await $fetch(server.HOST + '/api/v1/agencias', {
+        method: 'POST',
+        body: formData
+      })
+      emit('hidden'), emit('addedCorrect'), emit('refreshList')
+    } catch(err) {
+      console.error(err)
+      emit('addedFail')
+    }  
+  }
 }
 </script>

@@ -16,7 +16,7 @@
         <Column field="nombre" header="Nombre" />
         <Column field="direccion" header="Direccion" />
         <Column field="telefono" header="Telefono" />
-        <Column field="correo_electronico" header="Correo Electronico" />
+        <Column field="correo" header="Correo Electronico" />
         <Column field="estado" header="Estado">
           <template #body="slotProps">
             <div class="flex items-center justify-center">

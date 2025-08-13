@@ -178,7 +178,7 @@ import { server } from '~/server/server';
 
 interface Props { open: boolean, id: number }
 const props = defineProps<Props>()
-const emit = defineEmits(['hidden', 'refreshList', 'modified'])
+const emit = defineEmits(['hidden', 'refreshList', 'modified', 'error'])
 const visibleModal = ref(props.open)
 const TiposAtracciones = ref(['Naturales', 'Culturales', 'Enoturismo', 'Eventos'])
 const selectTipoAtraccion = ref()
@@ -188,6 +188,8 @@ const Departamentos = ref<any[]>([]), id_departamento = ref()
 const Provincias = ref<any[]>([]), id_ubicacion = ref()
 const fotos = ref<any>(null)
 
+const Encargado = ref<any>()
+
 const selectEstado = ref()
 const Estados = ref([
   { nombre: 'Activo', valor: true },
@@ -195,16 +197,19 @@ const Estados = ref([
 ])
 
 const initialValues = reactive({
-  tipo : selectTipoAtraccion, nombre: '', 
-  ubicacion: '', descripcion: '', 
-  horario_apertura: selectHorarioApertura, horario_cierre: selectHorarioCierre, 
-  precio: '', estado: true,
+  tipo : selectTipoAtraccion, 
+  nombre: '', 
+  ubicacion: '', 
+  descripcion: '', 
+  horario_apertura: selectHorarioApertura, 
+  horario_cierre: selectHorarioCierre, 
+  precio: '', 
+  estado: "true",
 })
 
 onMounted( async () => {
-  await obtenerAtraccionTuristica(), obtenerDepartamentos()
+  await obtenerAtraccionTuristica() 
 })
-
 
 async function obtenerDepartamentos(){
   const res: any[] = await $fetch(server.HOST + '/api/v1/departamentos')
@@ -230,7 +235,21 @@ watch(visibleModal, (newVal) => {
 })
 
 async function obtenerAtraccionTuristica() {
-  // code
+  const res: any = await $fetch(server.HOST + '/api/v2/atracciones-turisticas/' + props.id, {
+    method: 'GET'
+  })
+  initialValues.nombre = res.nombre
+  initialValues.tipo = res.categoria
+  initialValues.horario_apertura = res.horario_apertura
+  initialValues.horario_cierre = res.horario_cierre
+  initialValues.precio = res.precio
+  initialValues.descripcion = res.descripcion
+  initialValues.ubicacion = res.direccion
+  await obtenerDepartamentos()
+  id_departamento.value = res.ubicacion.departamento.id
+  await obtenerProvincias(res.ubicacion.provincia.id)
+  id_ubicacion.value = res.ubicacion.provincia.id
+  Encargado.value = res.encargado
 }
 
 const getSchema = () => z.object({
@@ -271,6 +290,23 @@ const getSchema = () => z.object({
 const resolver = computed( () => zodResolver(getSchema()))
 
 const onFormSubmit = async ( {valid} : any ) => {
-  // code
+  const formData = new FormData()
+  if( valid ) {
+    for(const [key, data] of Object.entries(initialValues)){
+      formData.append(key, data)
+    }
+    formData.append('id_encargado', Encargado.value.id)
+    formData.append('id_ubicacion', id_ubicacion.value)
+    try {
+      await $fetch(server.HOST + '/api/v2/atracciones-turisticas/' + props.id, {
+        method: 'POST',
+        body: formData
+      })
+      emit('modified'), emit('refreshList')
+    } catch( error ) {
+      console.log(error)
+      emit('error')
+    }
+  }
 }
 </script>

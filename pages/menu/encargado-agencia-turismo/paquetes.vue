@@ -19,17 +19,41 @@
         <template #empty>
           <p class="text-center"> No hay Paquetes </p>
         </template>
-        <Column field="id" header="#" />
-        <Column field="nombre" header="Nombre" />
-        <Column field="categoria" header="Categoria" />
-        <Column field="fecha" header="Fecha" />
-        <Column header="Precio">
+        <Column header="#">
           <template #body="slotProps">
-            <span clas="text-center"> {{ slotProps.data.precio }} bs </span>
+            <span class="text-sm"> {{ slotProps.data.id }} </span>
           </template>
         </Column>
-        <Column field="duracion" header="Duración" />
-        <Column field="salida" header="Salida" />
+        <Column header="Nombre">
+          <template #body="slotProps">
+            <span class="text-sm"> {{ slotProps.data.nombre }} </span>
+          </template>
+        </Column>
+        <Column header="Categoria">
+          <template #body="slotProps">
+            <span class="text-sm"> {{ slotProps.data.categoria }} </span>
+          </template>
+        </Column>
+        <Column header="Fecha">
+          <template #body="slotProps">
+            <span class="text-sm"> {{ modelFecha(slotProps.data.fecha) }} </span>
+          </template>
+        </Column>
+        <Column header="Precio">
+          <template #body="slotProps">
+            <span class="text-sm text-end"> {{ slotProps.data.precio }} bs </span>
+          </template>
+        </Column>
+        <Column header="Duración">
+          <template #body="slotProps">
+            <span class="text-sm"> {{ slotProps.data.duracion }} </span>
+          </template>
+        </Column>
+        <Column header="Salida">
+          <template #body="slotProps">
+            <span class="text-sm"> {{ modelHora(slotProps.data.salida) }} </span>
+          </template>
+        </Column>
         <Column header="Atracciones Turisticas">
           <template #body="slotProps">
             <div class="flex items-center justify-between">
@@ -62,12 +86,10 @@
 <script lang="ts" setup>
 import { server } from '~/server/server'
 import ModalAgregarPaquete from '~/components/encargado-agencia-turismo/modalAgregarPaquete.vue'
-import { mookPaquetesTuristicos } from '~/mooks/paquetes-turisticos/mooks'
 
 definePageMeta({ layout: 'menu-encargado-agencia-turismo' })
 
 const visibleModalAgregarPaquete = ref(false)
-// const Paquetes = ref<any[]>(mookPaquetesTuristicos)
 const Paquetes = ref<any[]>([])
 const toast = useToast()
 
@@ -83,4 +105,18 @@ const cargarPaquetes = async () => {
     console.error('Error al cargar los paquetes turísticos:', error)
   }
 }
+const modelFecha = (fecha: string | Date) => {
+  const d = new Date(fecha)
+  return d.toISOString().split("T")[0]
+}
+
+const modelHora = (salida: string | Date) => {
+  const d = new Date(salida)
+  return d.toLocaleTimeString("es-BO", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  })
+}
+
 </script>
