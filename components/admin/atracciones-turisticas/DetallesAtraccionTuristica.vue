@@ -1,8 +1,7 @@
 <template>
   <Dialog 
     v-model:visible="visibleModal" modal 
-    header="Detalles Atraccion Turistica" :style="{ width: '30rem' }" 
-    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" >
+    header="Detalles Atraccion Turistica" :style="{ width: '42rem' }">
     <template #header>
       <p class="text-xl font-bold"> {{ state.nombre }}</p>
     </template>
