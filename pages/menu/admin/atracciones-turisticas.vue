@@ -1,6 +1,5 @@
 <template>
   <div class="p-2">
-    <Toast />
     <Fieldset legend="Gestion de  Atracciones Turisticas">
       <DataTable 
         :value="AtraccionesTuristicas" 
@@ -10,8 +9,9 @@
           <div class="flex items-end justify-end gap-2">
             <InputText placeholder="Filtrar atracción..." size="small"/>
             <Button 
-              label="Agregar nueva Atraccion" size="small" 
-              @click="visibleNuevaAtraccionTuristica = true" variant="outlined"/>
+              label="Agregar nueva Atraccion" size="small" variant="outlined"
+              @click="router.push('/menu/admin/formulario/nueva-atraccion-turistica')" />
+              <!-- @click="visibleNuevaAtraccionTuristica = true" /> -->
           </div>
         </template>
         <template #empty>
@@ -21,49 +21,65 @@
               <Button 
                 icon="pi pi-refresh" rounded 
                 size="small" 
-                @click="funcObtenerAtraccionesTuristicas" />
+                @click="obtenerAtraccionesTuristicas" />
             </div>
           </div>
         </template>
         <Column header="#">
           <template #body="slotProps">
-            <span class="text-sm"> {{ slotProps.data.id }} </span>
+            <span class="text-sm"> 
+              {{ slotProps.data.id }} 
+            </span>
           </template>
         </Column>
-        <Column header="Categoria">
+        <!-- <Column header="Categoria">
           <template #body="slotProps">
-            <span class="text-sm"> {{ slotProps.data.categoria }} </span>
+            <span class="text-sm"> 
+              {{ slotProps.data.categoria }} 
+            </span>
           </template>
-        </Column>
+        </Column> -->
         <Column header="Nombre">
           <template #body="slotProps">
-            <span class="text-sm"> {{ slotProps.data.nombre }} </span>
+            <span class="text-sm"> 
+              {{ slotProps.data.nombre }} 
+            </span>
           </template>
         </Column>
         <Column header="Descripcion">
           <template #body="slotProps">
-            <span class="text-sm"> {{ slotProps.data.descripcion }} </span>
+            <span class="text-sm"> 
+              {{ slotProps.data.descripcion }} 
+            </span>
           </template>
         </Column>
         <Column header="Horario Apertura">
           <template #body="slotProps">
-            <span class="text-sm"> {{ slotProps.data.horario_apertura }} </span>
+            <span class="text-sm"> 
+              {{ slotProps.data.horario_apertura }} 
+            </span>
           </template>
         </Column>
         <Column header="Horario Cierre">
           <template #body="slotProps">
-            <span class="text-sm"> {{ slotProps.data.horario_cierre }} </span>
+            <span class="text-sm"> 
+              {{ slotProps.data.horario_cierre }} 
+            </span>
           </template>
         </Column>
         <Column field="precio" header="Precio">
           <template #body="slotProps">
-            <p class="text-sm text-end"> {{ slotProps.data.precio }} bs</p>
+            <p class="text-sm text-end"> 
+              {{ slotProps.data.precio }} bs
+            </p>
           </template>
         </Column>
         <Column header="Encargado">
           <template #body="slotProps">
             <div class="flex items-center justify-between">
-              <p class="text-sm"> {{  slotProps.data.encargado.nombre_completo   }}</p>
+              <p class="text-sm"> 
+                {{  slotProps.data.encargado.nombre_completo   }}
+              </p>
               <Button 
                 icon="pi pi-eye" size="small" 
                 variant="text" rounded severity="contrast" 
@@ -97,15 +113,6 @@
       </DataTable>
     </Fieldset>
 
-    <EditarAtraccionTuristica
-      :id="id_atraccion"
-      :open="VisibleEditarAtraccionTuristica"
-      v-if="VisibleEditarAtraccionTuristica"
-      @hidden="VisibleEditarAtraccionTuristica = false"
-      @refreshList="funcObtenerAtraccionesTuristicas"
-      @modified="toast.add({ severity: 'success', summary: 'Atraccion Turistica modificada', detail: 'Los datos se actualizaron correctamente.', life: 3000 })" 
-      />
-
     <ModalDetallesEncargado 
       :id="id_encargado"
       :open="VisibleDetallesEncargado"
@@ -118,37 +125,45 @@
       v-if="VisibleDetallesAtraccionTuristica"
       @hidden="VisibleDetallesAtraccionTuristica = false" />
 
-    <ModalAgregarAtraccionTuristica 
-      :open="visibleNuevaAtraccionTuristica"
-      v-if="visibleNuevaAtraccionTuristica"
-      @close="visibleNuevaAtraccionTuristica = false"
-      @update="ObtenerAtraccionesTuristicas()"
-      @success="toast.add({
-        severity: 'success', 
-        summary: 'Atraccion agregado', 
-        detail: 'La atraccion turistica se agregó correctamente.', 
-        life: 3000 })"
-      />
-      
+  </div>
+
+  <div class="p-2">
+    <Fieldset legend="Categorias">
+      <div class="grid grid-cols-4 gap-2">
+        <Card v-for="categoria in Categorias" :key="categoria.id" style="overflow: hidden;">
+          <template #header>
+            <p class="text-center font-bold mt-3"> {{ categoria.nombre }} </p>
+          </template>
+          <template #content>
+            <p class="text-center text-sm"> {{ categoria.descripcion }} </p>
+          </template>
+          <!-- <template #footer>
+            <div class="flex gap-1">
+              <Button 
+                label="Editar" variant="outlined" 
+                severity="warn" fluid size="small" /> 
+              <Button 
+                label="subcategorias" fluid variant="outlined"
+                @click="router.push('subcategorias')" size="small" />
+            </div>
+          </template> -->
+        </Card>
+      </div>
+    </Fieldset>
   </div>
 </template>
 
 <script setup lang="ts">
-import ModalAgregarAtraccionTuristica from '~/components/admin/atracciones-turisticas/ModalAgregarAtraccionTuristica.vue'
-import EditarAtraccionTuristica from '~/components/admin/atracciones-turisticas/ModalEditarAtraccionTuristica.vue'
 import DetallesAtraccionTuristica from '~/components/admin/atracciones-turisticas/DetallesAtraccionTuristica.vue'
 import ModalDetallesEncargado from '~/components/admin/atracciones-turisticas/ModalDetallesEncargado.vue'
 import { nombreEstado, colorEstado } from '~/utils/utils'
 import { server } from '~/server/server'
-import { ObtenerAtraccionesTuristicas } from '~/api/atracciones-turisticas'
 
+const router = useRouter()
 definePageMeta({ layout: 'menu-admin' })
 
 const AtraccionesTuristicas = ref<any[]>([])
-const visibleNuevaAtraccionTuristica = ref(false)
-
-const toast = useToast()
-
+const Categorias = ref<any[]>([])
 // Editar Atraccion Turistica
 const VisibleEditarAtraccionTuristica = ref(false)
 const id_atraccion = ref(0)
@@ -161,14 +176,31 @@ const VisibleDetallesEncargado = ref(false)
 const id_encargado = ref(0)
 
 onMounted( async () => {
-  funcObtenerAtraccionesTuristicas()
+  await obtenerAtraccionesTuristicas()
+  await obtenerCategorias()
 })
 
-async function funcObtenerAtraccionesTuristicas() {
-  const res:any[] = await $fetch(server.HOST + '/api/v2/atracciones-turisticas',{
-    method: 'GET'
-  })
-  AtraccionesTuristicas.value = res
+async function obtenerAtraccionesTuristicas() {
+  try {
+    const res:any[] = await $fetch(server.HOST + '/api/v2/atracciones-turisticas',{
+      method: 'GET'
+    })
+    AtraccionesTuristicas.value = res
+  } catch ( err ){
+    console.error(err)
+  }
+}
+
+async function obtenerCategorias(){
+  try {
+    const res:any[] = await $fetch(server.HOST + '/api/v1/categorias', {
+      method: 'GET'
+    })
+    Categorias.value = res
+    console.log(JSON.stringify(Categorias.value, null, 2))
+  } catch ( err ){
+    console.error(err)
+  }
 }
 
 const funcEditarAtraccionTuristica = (row : any ) => {

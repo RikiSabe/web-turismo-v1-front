@@ -17,3 +17,11 @@ export function colorEstado(estado: boolean): string {
 export function nombreEstado(estado: boolean): string {
   return (estado === true) ? "Activo" : "Inactivo"
 }
+
+export function colorVisible(estado: boolean): string {
+  return (estado === true) ? "success" : "warn"
+}
+
+export function nombreVisible(estado: boolean): string {
+  return (estado === true) ? "Visible" : "Oculto"
+}

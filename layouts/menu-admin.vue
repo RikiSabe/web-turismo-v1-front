@@ -28,8 +28,9 @@
 import { server } from '~/server/server'
 const items = [
   { label: 'Usuarios', route: 'usuarios', icon: 'pi pi-users' },
-  { label: 'Atracciones Turísticas', route: 'atracciones-turisticas', icon: 'pi pi-star' },
   { label: 'Agencias', route: 'agencias', icon: 'pi pi-building' },
+  { label: 'Atracciones Turísticas', route: 'atracciones-turisticas', icon: 'pi pi-star' },
+  // { label: 'Promociones', route: 'promociones', icon: 'pi pi-tags' },
   { label: 'Reservas', route: 'reservas', icon: 'pi pi-calendar' },
   { label: 'Cerrar Sesión', route: '/menu/publico/inicio' },
 ]

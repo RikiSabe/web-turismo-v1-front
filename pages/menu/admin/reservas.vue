@@ -4,16 +4,7 @@
       <DataTable 
         :value="Reservas" showGridlines 
         paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
-        size="small" >
-        <template #header>
-          <div class="flex items-end justify-end gap-2">
-            <InputText placeholder="Filtrar reserva..." size="small"/>
-            <Button label="Todos" variant="outlined" size="small" severity="info" />
-            <Button label="Completados" variant="outlined" size="small" severity="success" />
-            <Button label="Pendientes" variant="outlined" size="small" severity="warn" />
-            <Button label="Cancelados" variant="outlined" size="small" severity="danger" />
-          </div>
-        </template>
+        size="small">
         <template #empty>
           <div class="flex flex-col gap-4 p-4">
             <p class="text-center"> No hay atracciones turisticas</p>
@@ -40,11 +31,6 @@
             <span> {{ slotProps.data.nombre_usuario }} </span>
           </template>
         </Column>
-        <Column header="Fecha de reserva">
-          <template #body="slotProps">
-            <span> {{ slotProps.data.fecha }} </span>
-          </template>
-        </Column>
         <Column header="Promoción">
           <template #body="slotProps">
             <div class="flex items-center justify-between">
@@ -58,23 +44,21 @@
             </div>
           </template>
         </Column>
-        <Column header="# de personas">
-          <template #body="slotProps">
-            <p v-if="slotProps.data.numero_personas > 1"> {{ slotProps.data.numero_personas }} personas </p>
-            <p v-if="slotProps.data.numero_personas == 1"> {{ slotProps.data.numero_personas }} persona </p>
-          </template>
-        </Column>
         <Column header="Estado">
           <template #body="slotProps">
-            <Tag severity="success" :value="slotProps.data.estado" />
+            <div class="flex items-center justify-center">
+              <Tag severity="success" :value="nombreEstado(slotProps.data.estado)" />
+            </div>
           </template>
         </Column>
         <Column header="Acciones" >
           <template #body="slotProps">
-            <Button 
+            <div class="flex items-center justify-center">
+              <Button 
               label="decidir" size="small" 
               variant="outlined"
               @click="openDecidirReserva(slotProps.data.id)"/>
+            </div>
           </template>
         </Column>
       </DataTable>

@@ -21,26 +21,32 @@
           <div class="flex items-end justify-end gap-2">
             <InputText placeholder="Filtrar usuario..." size="small"/>
             <Button 
-              label="Agregar nuevo Usuario" variant="outlined"
-              size="small" @click="funcNuevoUsuario" />
+              label="Agregar nuevo Usuario" variant="outlined" size="small" 
+              @click="router.push('/menu/admin/formulario/nuevo-usuario')" />
           </div>
         </template>
         <Column header="#">
           <template #body="slotProps">
-            <span class="text-sm"> {{ slotProps.data.id }} </span>
+            <span class="text-sm"> 
+              {{ slotProps.data.id }} 
+            </span>
           </template>
         </Column>
-        <Column header="Nombre">
+        <Column header="Nombres">
           <template #body="slotProps">
-            <span class="text-sm"> {{ slotProps.data.nombre }} </span>
+            <span class="text-sm"> 
+              {{ slotProps.data.nombre }} 
+            </span>
           </template>
         </Column>
-        <Column header="Apellido P">
+        <Column header="Apellido P.">
           <template #body="slotProps">
-            <span class="text-sm"> {{ slotProps.data.apellido_paterno }} </span>
+            <span class="text-sm"> 
+              {{ slotProps.data.apellido_paterno }} 
+            </span>
           </template>
         </Column>
-        <Column header="Apellido M">
+        <Column header="Apellido M.">
           <template #body="slotProps">
             <span v-if="slotProps.data.apellido_materno" class="text-sm">
               {{ slotProps.data.apellido_materno }} 
@@ -48,24 +54,32 @@
             <span v-else class="text-sm"> N/A </span>
           </template>
         </Column>
-        <Column header="CI">
+        <Column header="C.I.">
           <template #body="slotProps">
-            <span class="text-sm"> {{ slotProps.data.ci }} </span>
+            <span class="text-sm"> 
+              {{ slotProps.data.ci }} 
+            </span>
           </template>
         </Column>
-        <Column header="Correo Electronico">
+        <Column header="Correo Electrónico">
           <template #body="slotProps">
-            <span class="text-sm"> {{ slotProps.data.correo }} </span>
+            <span class="text-sm"> 
+              {{ slotProps.data.correo }} 
+            </span>
           </template>
         </Column>
-        <Column header="Telefono">
+        <Column header="Teléfono">
           <template #body="slotProps">
-            <span class="text-sm"> {{ slotProps.data.telefono }} </span>
+            <span class="text-sm"> 
+              {{ slotProps.data.telefono }} 
+            </span>
           </template>
         </Column>
         <Column header="Rol">
           <template #body="slotProps">
-            <p class="text-sm text-center"> {{ slotProps.data.rol }}</p>
+            <p class="text-sm text-center"> 
+              {{ slotProps.data.rol }}
+            </p>
           </template>
         </Column>
         <Column field="estado" header="Estado">
@@ -77,49 +91,27 @@
             </div>
           </template>
         </Column>
-        <Column header="Acciones">
-          <template #body="slotProps">
+        <Column header="Opciones">
+          <template #body>
             <div class="flex justify-center gap-2">
               <Button 
                 icon="pi pi-pencil" variant="text"
-                @click="funcEditarUsuario(slotProps.data.id)" 
                 size="small" rounded/>
             </div>
           </template>
         </Column>
       </DataTable>
     </Fieldset>
-
-    <ModalEditarUsuario
-      v-if="VisibleEditarUsuario"
-      :id="id_usuario" :open="VisibleEditarUsuario"
-      @hidden="VisibleEditarUsuario = false" 
-      @refreshList="funcObtenerUsuario" 
-      @modified="funcUsuarioEditado" />
-    
-    <ModalAgregarUsuario
-      v-if="VisibleNuevoUsuario"
-      :open="VisibleNuevoUsuario"
-      @hidden="VisibleNuevoUsuario = false" 
-      @refreshList="funcObtenerUsuario" 
-      @addedcorrect="funcUsuarioAgregadoCorrecto"
-      @addedfail="funcUsuarioAgregadoFallido" />
-
   </div>
 </template>
 
 <script setup lang="ts">
 import { ObtenerUsuarios } from '~/api/usuarios'
-import ModalEditarUsuario from '~/components/admin/usuarios/ModalEditarUsuario.vue'
-import ModalAgregarUsuario from '~/components/admin/usuarios/ModalAgregarUsuario.vue'
 import { nombreEstado, colorEstado } from '~/utils/utils'
 definePageMeta({ layout: 'menu-admin' })
 
-const toast = useToast()
+const router = useRouter()
 const Usuarios = ref<any>([])
-const VisibleEditarUsuario = ref(false)
-const id_usuario = ref(0)
-const VisibleNuevoUsuario = ref(false)
 
 onMounted( async () => {
   await funcObtenerUsuario()
@@ -129,39 +121,4 @@ async function funcObtenerUsuario() {
   Usuarios.value = await ObtenerUsuarios()
 }
 
-const funcEditarUsuario = (row : any ) => {
-  VisibleEditarUsuario.value = true
-  id_usuario.value = row
-}
-
-const funcNuevoUsuario = () => {
-  VisibleNuevoUsuario.value = true
-}
-
-const funcUsuarioEditado = () => {
-  toast.add({
-    severity: 'success',
-    summary: 'Usuario modificado',
-    detail: 'Los datos se actualizaron correctamente.',
-    life: 3000,
-  })
-}
-
-const funcUsuarioAgregadoCorrecto = () => {
-  toast.add({
-    severity: 'success',
-    summary: 'Usuario agregado',
-    detail: 'El usuario se agregó correctamente.',
-    life: 3000,
-  })
-}
-
-const funcUsuarioAgregadoFallido = () => {
-  toast.add({ 
-    severity: 'error', 
-    summary: 'Error al agregar usuario', 
-    detail: 'Ocurrió un problema al intentar agregar el usuario.', 
-    life: 3000,
-  })
-}
 </script>

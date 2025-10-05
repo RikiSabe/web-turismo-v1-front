@@ -11,9 +11,9 @@
               placeholder="buscar paquete..."
               size="small" />
             <Button 
-              label="Agregar Paquete" variant="outlined" 
-              @click="visibleModalAgregarPaquete = true" 
-              size="small" />
+              label="Agregar Paquete" variant="outlined" size="small"
+              @click="router.push('/menu/encargado-agencia-turismo/formulario/nuevo-paquete')" />
+              <!-- @click="visibleModalAgregarPaquete = true" /> -->
           </div>
         </template>
         <template #empty>
@@ -29,14 +29,9 @@
             <span class="text-sm"> {{ slotProps.data.nombre }} </span>
           </template>
         </Column>
-        <Column header="Categoria">
+        <Column header="Descripción">
           <template #body="slotProps">
-            <span class="text-sm"> {{ slotProps.data.categoria }} </span>
-          </template>
-        </Column>
-        <Column header="Fecha">
-          <template #body="slotProps">
-            <span class="text-sm"> {{ modelFecha(slotProps.data.fecha) }} </span>
+            <span class="text-sm"> {{ slotProps.data.descripcion }} </span>
           </template>
         </Column>
         <Column header="Precio">
@@ -44,54 +39,43 @@
             <span class="text-sm text-end"> {{ slotProps.data.precio }} bs </span>
           </template>
         </Column>
-        <Column header="Duración">
+        <Column header="Hora Inicial">
           <template #body="slotProps">
-            <span class="text-sm"> {{ slotProps.data.duracion }} </span>
+            <span class="text-sm"> {{ modelHora(slotProps.data.hora_inicial) }} </span>
           </template>
         </Column>
-        <Column header="Salida">
+        <Column header="Estado">
           <template #body="slotProps">
-            <span class="text-sm"> {{ modelHora(slotProps.data.salida) }} </span>
-          </template>
-        </Column>
-        <Column header="Atracciones Turisticas">
-          <template #body="slotProps">
-            <div class="flex items-center justify-between">
-              <div class="flex flex-wrap gap-1">
-                <Badge
-                  v-for="at in slotProps.data.atracciones_turisticas" 
-                  :key="at.id" severity="success" :value="at.nombre" />
-              </div>
-              <Button icon="pi pi-eye" variant="text" />
+            <div class="flex items-center justify-center">
+              <Tag 
+                :value="nombreEstado(slotProps.data.estado)" 
+                :severity="colorEstado(slotProps.data.estado)" />
             </div>
           </template>
         </Column>
+
+        <Column header="Visibilidad">
+          <template #body="slotProps">
+            <div class="flex items-center justify-center">
+              <Tag 
+                :value="nombreVisible(slotProps.data.visible)" 
+                :severity="colorVisible(slotProps.data.visible)" />
+            </div>
+          </template>
+        </Column>
+
       </DataTable>
     </Fieldset>
   </div>
-
-  <ModalAgregarPaquete 
-    :open="visibleModalAgregarPaquete"
-    v-if="visibleModalAgregarPaquete"
-    @close="visibleModalAgregarPaquete = false"
-    @update="cargarPaquetes"
-    @success="toast.add({
-      severity: 'success',
-      summary: 'Paquete Agregado',
-      detail: 'Paquete Agregado Correctamente', 
-      life: 3000 })"
-    />
 </template>
 
 <script lang="ts" setup>
 import { server } from '~/server/server'
-import ModalAgregarPaquete from '~/components/encargado-agencia-turismo/modalAgregarPaquete.vue'
 
 definePageMeta({ layout: 'menu-encargado-agencia-turismo' })
 
-const visibleModalAgregarPaquete = ref(false)
 const Paquetes = ref<any[]>([])
-const toast = useToast()
+const router = useRouter()
 
 onMounted( async () => {
   await cargarPaquetes()
@@ -104,10 +88,6 @@ const cargarPaquetes = async () => {
   } catch (error) {
     console.error('Error al cargar los paquetes turísticos:', error)
   }
-}
-const modelFecha = (fecha: string | Date) => {
-  const d = new Date(fecha)
-  return d.toISOString().split("T")[0]
 }
 
 const modelHora = (salida: string | Date) => {

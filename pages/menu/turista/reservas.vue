@@ -1,15 +1,18 @@
 <template>
   <div class="p-2">
     <Fieldset legend="Reservas">
-      <div class="grid grid-cols-3 gap-2">
+      <div class="grid grid-cols-2 gap-2">
         <Card v-for="reserva in Reservas" :key="reserva.id">
-          <template #header>
-            <img alt="user header" src="/images/photo_turismo.jpg"/>
-          </template>
           <template #content>
-            <p> Descripción:  {{ reserva.descripcion }} </p>
-            <p> Fecha: {{ formatDate(reserva.fecha) }} </p>
-            <p> Estado: <Tag :severity="funcSeverity(reserva.estado)" :value="funcEstado(reserva.estado)"/> </p> 
+            <p class="flex justify-between gap-2 m-2 p-4"> Descripción:  {{ reserva.descripcion }} </p>
+            <div class="flex justify-between gap-2 m-2 p-4">
+              <p> Fecha: {{ formatDate(reserva.fecha) }} </p>
+              <p> Estado: <Tag :severity="funcSeverity(reserva.estado)" :value="funcEstado(reserva.estado)"/> </p> 
+            </div>
+            <div class="p-4 ring ring-slate-200 rounded-lg m-2">
+              <p> Paquete : {{ reserva.paquete.nombre }}</p>
+              <p> Descripción : {{ reserva.paquete.descripcion }} </p>
+            </div>
           </template>
         </Card>
       </div>
