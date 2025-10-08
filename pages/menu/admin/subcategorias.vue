@@ -10,10 +10,10 @@
           <template #content>
             <p class="text-center text-sm"> {{ sub.descripcion }} </p>
           </template>
-          <template #footer>
+          <!-- <template #footer>
             <Button 
               label="editar" fluid variant="outlined" />
-          </template>
+          </template> -->
         </Card>
       </div>
     </Fieldset>
@@ -25,6 +25,8 @@ import { server } from '~/server/server'
 
 definePageMeta({ layout : 'menu-admin' })
 const router = useRouter()
+const route = useRoute()
+const id_categoria = route.query.id
 const SubCategorias = ref<any[]>([])
 
 onMounted( async () => {
@@ -33,7 +35,7 @@ onMounted( async () => {
 
 async function obtenerSubCategorias(){
   try {
-    const res:any[] = await $fetch(server.HOST + '/api/v1/subcategorias/2' , {
+    const res:any[] = await $fetch(server.HOST + '/api/v1/subcategorias/' + id_categoria , {
       method: 'GET'
     })
     SubCategorias.value = res

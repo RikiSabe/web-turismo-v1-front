@@ -3,7 +3,7 @@
     <Toast />
     <Fieldset legend="Gestión de Usuarios">
       <DataTable 
-        :value="Usuarios"
+        :value="UsuariosFiltrados"
         showGridlines 
         paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
         size="small" >
@@ -19,7 +19,7 @@
         </template>
         <template #header>
           <div class="flex items-end justify-end gap-2">
-            <InputText placeholder="Filtrar usuario..." size="small"/>
+            <InputText v-model="filtro" placeholder="Filtrar usuario..." size="small"/>
             <Button 
               label="Agregar nuevo Usuario" variant="outlined" size="small" 
               @click="router.push('/menu/admin/formulario/nuevo-usuario')" />
@@ -92,11 +92,29 @@
           </template>
         </Column>
         <Column header="Opciones">
-          <template #body>
+          <template #body="slotProps">
             <div class="flex justify-center gap-2">
               <Button 
-                icon="pi pi-pencil" variant="text"
-                size="small" rounded/>
+                v-tooltip.button.left="{ value: 'Modificar datos personales' }"
+                icon="pi pi-pencil" variant="text" size="small" 
+                @click="router.push({
+                  path: 'formulario/modificar-usuario/datospersonales',
+                  query: { id: slotProps.data.id }
+                })"/>
+              <Button
+                v-tooltip.button.left="{ value: 'Modificar datos privados' }"
+                icon="pi pi-pen-to-square" variant="text"
+                size="small" @click="router.push({
+                  path: 'formulario/modificar-usuario/datosprivados',
+                  query: { id: slotProps.data.id }
+                })"/>
+              <Button
+                v-tooltip.button.left="{ value: 'Modificar Foto' }"
+                icon="pi pi-image" variant="text"
+                size="small" @click="router.push({
+                  path: 'formulario/modificar-usuario/foto',
+                  query: { id: slotProps.data.id }
+                })"/>
             </div>
           </template>
         </Column>
@@ -112,6 +130,7 @@ definePageMeta({ layout: 'menu-admin' })
 
 const router = useRouter()
 const Usuarios = ref<any>([])
+const filtro = ref('')
 
 onMounted( async () => {
   await funcObtenerUsuario()
@@ -120,5 +139,20 @@ onMounted( async () => {
 async function funcObtenerUsuario() {
   Usuarios.value = await ObtenerUsuarios()
 }
+
+const UsuariosFiltrados = computed(() => {
+  if (!filtro.value.trim()) return Usuarios.value
+  const texto = filtro.value.toLowerCase()
+
+  return Usuarios.value.filter((u : any) =>
+    (u.nombre?.toLowerCase().includes(texto)) ||
+    (u.apellido_paterno?.toLowerCase().includes(texto)) ||
+    (u.apellido_materno?.toLowerCase().includes(texto)) ||
+    (u.ci?.toLowerCase().includes(texto)) ||
+    (u.correo?.toLowerCase().includes(texto)) ||
+    (u.telefono?.toString().includes(texto)) ||
+    (u.rol?.toLowerCase().includes(texto))
+  )
+})
 
 </script>

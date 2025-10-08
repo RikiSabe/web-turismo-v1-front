@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+  <div class="p-2 grid sm:grid-cols-1 lg:grid-cols-2 gap-4">
     <Card v-for="item in Contenido" :key="item.title" style="overflow: hidden;">
       <template #header>
         <img alt="user header" :src="item.src"/>
@@ -12,7 +12,7 @@
       </template>
       <template #footer>
         <div class="flex justify-center">
-          <Button label="Ver más.."  variant="outlined" @click="item.onClick && item.onClick()"/>
+          <Button label="Ver más.."  variant="outlined" fluid @click="item.onClick && item.onClick()"/>
         </div>
       </template>
     </Card>
@@ -24,11 +24,6 @@
   const router = useRouter()
 
   const Contenido = [
-    {
-      title: 'Promociones',
-      content: 'Aprovecha descuentos exclusivos en paquetes turísticos por tiempo limitado. ¡Viaja más por menos!',
-      src: '/images/photo_turismo.jpg'
-    },
     {
       title: 'Atracciones Turísticas',
       content: 'Descubre los destinos más fascinantes: ruinas históricas, maravillas naturales y experiencias culturales inolvidables.',

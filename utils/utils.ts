@@ -18,6 +18,14 @@ export function nombreEstado(estado: boolean): string {
   return (estado === true) ? "Activo" : "Inactivo"
 }
 
+export function colorEstadoReserva(estado: boolean): string {
+  return (estado === true) ? "success" : "warn"
+}
+
+export function nombreEstadoReserva(estado: boolean): string {
+  return (estado === true) ? "Confirmado" : "Pendiente"
+}
+
 export function colorVisible(estado: boolean): string {
   return (estado === true) ? "success" : "warn"
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="p-2">
-    <Fieldset legend="Gestion de  Atracciones Turisticas">
+    <Fieldset legend="Gestión de  Atracciones Turísticas">
       <DataTable 
         :value="AtraccionesTuristicas" 
         showGridlines size="small" 
@@ -8,10 +8,6 @@
         <template #header>
           <div class="flex items-end justify-end gap-2">
             <InputText placeholder="Filtrar atracción..." size="small"/>
-            <Button 
-              label="Agregar nueva Atraccion" size="small" variant="outlined"
-              @click="router.push('/menu/admin/formulario/nueva-atraccion-turistica')" />
-              <!-- @click="visibleNuevaAtraccionTuristica = true" /> -->
           </div>
         </template>
         <template #empty>
@@ -46,7 +42,7 @@
             </div>
           </template>
         </Column>
-        <Column header="Descripcion">
+        <Column header="Descripción">
           <template #body="slotProps">
             <span class="text-sm"> 
               {{ slotProps.data.descripcion }} 
@@ -97,33 +93,6 @@
             </div>
           </template>
         </Column>
-        <Column header="Acciones">
-          <template #body="slotProps">
-            <div class="flex justify-center gap-2">
-              <Button 
-                v-tooltip.button.left="{ value : 'Modificar datos generales' }"
-                icon="pi pi-pencil" type="button" variant="text" 
-                size="small" @click="router.push({
-                  path: 'formulario/modificar-atraccion-turistica/datos-generales',
-                  query: { id : slotProps.data.id }
-                })" />
-              <Button 
-                v-tooltip.button.left="{ value : 'Modificar datos especificos' }"
-                icon="pi pi-pen-to-square" type="button" variant="text" 
-                size="small" @click="router.push({
-                  path: 'formulario/modificar-atraccion-turistica/datos-especificos',
-                  query: { id : slotProps.data.id }
-                })" />
-              <Button
-                v-tooltip.button.left="{ value : 'Modificar fotos' }"
-                icon="pi pi-image" type="button" variant="text" 
-                size="small" @click="router.push({
-                  path: 'formulario/modificar-atraccion-turistica/fotos',
-                  query: { id : slotProps.data.id }
-                })" />
-            </div>
-          </template>
-        </Column>
       </DataTable>
     </Fieldset>
 
@@ -140,31 +109,6 @@
       @hidden="VisibleDetallesAtraccionTuristica = false" />
 
   </div>
-
-  <div class="p-2">
-    <Fieldset legend="Categorias">
-      <div class="grid grid-cols-4 gap-2">
-        <Card v-for="categoria in Categorias" :key="categoria.id" style="overflow: hidden;">
-          <template #header>
-            <p class="text-center font-bold mt-3"> {{ categoria.nombre }} </p>
-          </template>
-          <template #content>
-            <p class="text-center text-sm"> {{ categoria.descripcion }} </p>
-          </template>
-          <template #footer>
-            <div class="flex gap-1">
-              <Button 
-                label="subcategorias" fluid variant="outlined"
-                size="small" @click="router.push({
-                  path: 'subcategorias',
-                  query: { id : categoria.id }
-                })" />
-            </div>
-          </template>
-        </Card>
-      </div>
-    </Fieldset>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -174,7 +118,7 @@ import { nombreEstado, colorEstado } from '~/utils/utils'
 import { server } from '~/server/server'
 
 const router = useRouter()
-definePageMeta({ layout: 'menu-admin' })
+definePageMeta({ layout: 'menu-encargado-agencia-turismo' })
 
 const AtraccionesTuristicas = ref<any[]>([])
 const Categorias = ref<any[]>([])

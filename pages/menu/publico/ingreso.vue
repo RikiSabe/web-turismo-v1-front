@@ -2,48 +2,57 @@
   <Toast />
   <div class="p-2">
     <div class="flex items-center justify-center">
-      <div class="card justify-center bg-white p-8 rounded-lg">
-        <p class="text-l font-bold text-center pb-2"> Inicia Sesion en tu cuenta </p>
-        <Form
-          v-slot="$form" :initialValues="initialValues" :resolver="resolver"
-          @submit="handleIngreso"
-          class="flex flex-col gap-2 w-full sm:w-60">
-          <div class="flex flex-col gap-1">
-            <label for="correo" class="text-sm text-slate-500"> Correo electrónico </label>
-            <InputText 
-              id="correo" name="correo" size="small"
-              v-model="initialValues.correo" />
-            <Message v-if="$form.correo?.invalid" severity="error" size="small" variant="simple">
-              {{ $form.correo.error.message }}
-            </Message>
+      <div class="card justify-center bg-white mt-8 p-8 rounded-lg">
+        <div class="grid grid-cols-2 gap-4 p-4 rounded-lg ring ring-slate-200">
+          <div>
+            <img alt="login-image" src="/public/images/portada.jpg" class="w-96 h-96 rounded-lg"/>
           </div>
-
-          <div class="flex flex-col gap-1">
-            <label for="contra" class="text-sm text-slate-500"> Contraseña </label>
-            <Password 
-              id="contra" name="contra"
-              v-model="initialValues.contra" toggleMask 
-              :feedback="false" inputClass="w-full" 
-              aria-describedby="contra-help" size="small" />
-            <Message v-if="$form.contra?.invalid" severity="error" size="small" variant="simple">
-              {{ $form.contra.error.message }}
-            </Message>
+          <div class="flex flex-col justify-center">
+            <p class="text-l font-bold text-center pb-8"> Inicia Sesion en tu cuenta </p>
+            <Form
+              v-slot="$form" :initialValues="initialValues" :resolver="resolver"
+              @submit="handleIngreso"
+              class="flex flex-col gap-2">
+              <div class="flex flex-col gap-1">
+                <label for="correo" class="text-sm text-slate-500"> Correo electrónico </label>
+                <InputText 
+                  placeholder="correo.turista.ejemplo@gmail.com"
+                  id="correo" name="correo" size="small"
+                  v-model="initialValues.correo" />
+                <Message v-if="$form.correo?.invalid" severity="error" size="small" variant="simple">
+                  {{ $form.correo.error.message }}
+                </Message>
+              </div>
+    
+              <div class="flex flex-col gap-1">
+                <label for="contra" class="text-sm text-slate-500"> Contraseña </label>
+                <Password 
+                  placeholder="contraseña super segura"
+                  id="contra" name="contra"
+                  v-model="initialValues.contra" toggleMask 
+                  :feedback="false" inputClass="w-full" 
+                  aria-describedby="contra-help" size="small" />
+                <Message v-if="$form.contra?.invalid" severity="error" size="small" variant="simple">
+                  {{ $form.contra.error.message }}
+                </Message>
+              </div>
+    
+              <Button type="submit" label="Ingresar" variant="outlined" size="small" />
+            </Form>
+            <Divider align="center">
+              <p> o también </p>
+            </Divider>
+            <div class="flex gap-2">
+              <Button 
+                label="Facebook" icon="pi pi-facebook" variant="outlined" 
+                severity="info"
+                fluid size="small"/>
+              <Button 
+                label="Google" icon="pi pi-google" variant="outlined" 
+                severity="secondary"
+                fluid size="small"/>
+            </div>
           </div>
-
-          <Button type="submit" label="Ingresar" variant="outlined" size="small" />
-        </Form>
-        <Divider align="center">
-          <p> o también </p>
-        </Divider>
-        <div class="flex gap-2">
-          <Button 
-            label="Facebook" icon="pi pi-facebook" variant="outlined" 
-            severity="info"
-            fluid size="small"/>
-          <Button 
-            label="Google" icon="pi pi-google" variant="outlined" 
-            severity="secondary"
-            fluid size="small"/>
         </div>
       </div>
     </div>

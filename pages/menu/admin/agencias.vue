@@ -64,8 +64,19 @@
           <template #body="slotProps">
             <div class="flex justify-center gap-2">
               <Button 
-                icon="pi pi-pencil" variant="text"  />
-                <!-- @click="funcEditarAgencia(slotProps.data.id)" /> -->
+                v-tooltip.button.left="{ value: 'Modificar datos generales' }"
+                icon="pi pi-pen-to-square" variant="text"
+                size="small" @click="router.push({
+                  path: 'formulario/modificar-agencia/datos-generales',
+                  query: { id: slotProps.data.id }
+                })" />
+              <Button 
+                v-tooltip.button.left="{ value: 'Modificar fotos' }"
+                icon="pi pi-image" variant="text" 
+                size="small" @click="router.push({
+                  path: 'formulario/modificar-agencia/fotos',
+                  query: { id: slotProps.data.id }
+                })" />
             </div>
           </template>
         </Column>

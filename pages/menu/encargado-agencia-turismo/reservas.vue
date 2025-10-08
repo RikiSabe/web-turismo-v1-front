@@ -31,16 +31,11 @@
             <span> {{ slotProps.data.nombre_usuario }} </span>
           </template>
         </Column>
-        <Column header="Promoción">
+        <Column header="Comprobante">
           <template #body="slotProps">
-            <div class="flex items-center justify-between">
-              <div v-if="slotProps.data.procion">
-                <p> {{ slotProps.data.promocion.nombre }} </p>
-                <Button icon="pi pi-eye" variant="text" size="small"/>
-              </div>
-              <div v-else>
-                Sin promociones
-              </div>
+            <div class="flex justify-center">
+              <Button 
+                icon="pi pi-eye" size="small" variant="text" />
             </div>
           </template>
         </Column>
@@ -53,7 +48,7 @@
             </div>
           </template>
         </Column>
-        <!-- <Column header="Acciones" >
+        <Column header="Acciones" >
           <template #body="slotProps">
             <div class="flex items-center justify-center">
               <Button 
@@ -62,7 +57,7 @@
               @click="openDecidirReserva(slotProps.data.id)"/>
             </div>
           </template>
-        </Column> -->
+        </Column>
       </DataTable>
     </Fieldset>
   </div>
@@ -79,7 +74,7 @@
 import { server } from '~/server/server'
 import ModalDecidirReserva from '~/components/admin/reservas/ModalDecidirReserva.vue'
 
-definePageMeta({ layout: 'menu-admin'}) 
+definePageMeta({ layout: 'menu-encargado-agencia-turismo'}) 
 
 const Reservas = ref<any[]>([])
 const Visible = ref(false)
