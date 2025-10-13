@@ -37,7 +37,7 @@
               <p class="text-sm"> ver comprobante de pago </p>
               <Button 
                 icon="pi pi-eye" size="small" variant="text"
-                @click="abrirComprobante(slotProps.data.id_usuario, slotProps.data.id_reserva)" />
+                @click="abrirComprobante(slotProps.data.id_usuario, slotProps.data.id)" />
             </div>
           </template>
         </Column>
@@ -107,6 +107,7 @@ const obtenerReservas = async () => {
 
 const abrirComprobante = (id_usuario_param: any, id_reserva_param: any) => {
   VisibleComprobante.value = true
+  console.log(id_usuario_param, id_reserva_param)
   id_usuario.value = id_usuario_param
   id_reserva.value = id_reserva_param
 }

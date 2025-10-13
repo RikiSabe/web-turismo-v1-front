@@ -90,6 +90,8 @@
 </template>
 
 <script setup lang="ts">
+import { server } from '~/server/server'
+
 definePageMeta({ layout: 'menu' })
 
 const initialValues = reactive({
@@ -102,7 +104,19 @@ const initialValues = reactive({
 
 async function handleIngreso({valid} : any) {
   if( valid ) {
-    // ok
+    try {
+      const response:any = await $fetch(server.HOST + '/api/v1/registro', {
+        method: 'POST',
+        body: initialValues
+      })
+      if (response.ok) {
+        await useRouter().push('/menu/publico/ingreso')
+      } else {
+        console.error('Registration failed:', response.message)
+      }
+    } catch (error) {
+      console.error('Error during registration:', error)
+    }
   }
 }
 </script>
