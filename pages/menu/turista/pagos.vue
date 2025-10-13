@@ -11,8 +11,8 @@
             <p> Actividades : {{ reserva.actividades_paquete }} </p>
             <p class="text-end"> Estado: 
               <Tag 
-                :value="nombreEstadoReserva(!reserva.estado_reserva)" 
-                :severity="colorEstadoReserva(!reserva.estado_reserva)" /> 
+                :value="nombreEstadoReserva(reserva.estado_reserva)" 
+                :severity="colorEstadoReserva(reserva.estado_reserva)" /> 
             </p>
             <p class="text-center"> Datos de la Agencia {{ reserva. nombre_agencia }} </p>
             <p> Encargado: {{ reserva.nombre_encargado }} {{ reserva.apellido_encargado }}</p>
@@ -21,9 +21,9 @@
           </template>
           <template #footer>
             <Button 
-              v-if="reserva.estado_reserva === true" 
+              v-if="reserva.estado_reserva !== true" 
               label="Pagar" variant="outlined" fluid size="small" 
-              @click="visibleQR = true, id_encargado = reserva.id_encargado" />
+              @click="abrirQR(reserva.id_encargado, reserva.id_reserva)" />
           </template>
         </Card>
       </div>
@@ -34,6 +34,7 @@
     v-if="visibleQR"
     :open="visibleQR"
     :id_encargado="id_encargado"
+    :id_reserva="id_reserva"
     @close="visibleQR = false"
     @ok="toast.add({ 
       severity: 'info', 
@@ -42,13 +43,15 @@
 </template>
 
 <script lang="ts" setup>
+import { nombreEstadoReserva, colorEstadoReserva } from '~/utils/utils'
 import PagosQR from '~/components/turista/pago/PagoQR.vue'
 import { server } from '~/server/server'
 
 definePageMeta({ layout: 'menu-turista' }) 
 
 const Reservas = ref<any[]>([])
-const id_usuario = ref<Number>(0)
+const id_usuario = ref<number>(0)
+const id_reserva = ref<number>(0)
 const id_encargado = ref(0)
 const visibleQR = ref(false)
 const toast = useToast()
@@ -68,4 +71,10 @@ onMounted(async () => {
     console.error("Error al cargar las reservas:", error)
   }
 })
+
+function abrirQR(id_e: number, id_r: number) {
+  id_encargado.value = id_e
+  id_reserva.value = id_r
+  visibleQR.value = true
+}
 </script>

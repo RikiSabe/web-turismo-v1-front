@@ -13,8 +13,7 @@
           :key="paquete.nombre" 
           style="overflow: hidden;">
           <template #header>
-            <!-- <img alt="user header" src="/images/photo_turismo.jpg"/> -->
-            <img alt="user header" :src="paquete.atracciones[0].foto" />
+            <img alt="user header" :src="paquete.atracciones[0].foto" class="w-full" />
           </template>
           <template #title>
             <p class="text-center font-bold"> 
@@ -29,7 +28,7 @@
               <p class="text-sm"> Tipo: {{ paquete.tipo }} </p>
               <div class="text-sm" v-if="paquete.tipo === 'Días concurrentes'">
                 <div class="grid grid-cols-3 gap-2">
-                  <Tag v-for="vigencia in paquete.vigencias" :key="vigencia.id" :value="vigencia.id_dia"/>
+                  <Tag v-for="vigencia in paquete.vigencias" :key="vigencia.id" :value="diaSemana(vigencia.id_dia)"/>
                 </div>
               </div>
               <div class="text-sm" v-if="paquete.tipo === 'Rango de días especificos'">
@@ -70,6 +69,7 @@
 
 <script lang="ts" setup>
 import DetallesPaqueteTuristico from '~/components/turista/paquetes-turisticos/DetallesPaqueteTuristico.vue'
+import { diaSemana } from '~/utils/utils'
 import { server } from '~/server/server'
 definePageMeta({ layout: 'menu-turista' })
 

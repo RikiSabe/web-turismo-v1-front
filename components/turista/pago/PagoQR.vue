@@ -27,11 +27,11 @@
   </Dialog>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { server } from '~/server/server';
 
 interface Props{
-  open: boolean, id_encargado:number
+  open: boolean, id_encargado: number, id_reserva: number
 }
 const props = defineProps<Props>()
 const emit = defineEmits(['ok', 'close'])
@@ -40,6 +40,12 @@ const QR = ref<any>(null)
 
 const src = ref<string | null>(null)
 const file = ref<File | null>(null)
+
+watch(visible, (newVal) => {
+  if (!newVal) {
+    emit('close')
+  }
+})
 
 function onFileSelect(event: any) {
   const selectedFile = event.files[0]
@@ -66,7 +72,17 @@ onMounted( async () => {
 
 async function handleSave() {
   try {
-    // 
+    const id_usuario = Number(sessionStorage.getItem('id'))
+    const formData = new FormData()
+    if (file.value) {
+      formData.append('comprobante', file.value)
+    } else {
+      throw new Error('No file selected')
+    }
+    await $fetch(server.HOST + '/api/v1/pagos/comprobante/' + id_usuario + '/' + props.id_reserva , {
+      method: 'POST',
+      body: formData
+    })
     emit('ok'), emit('close')
     visible.value = false
   } catch (err) {

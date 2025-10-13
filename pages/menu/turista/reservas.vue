@@ -7,7 +7,11 @@
             <p class="flex justify-between gap-2 m-2 p-4"> Descripción:  {{ reserva.descripcion }} </p>
             <div class="flex justify-between gap-2 m-2 p-4">
               <p> Fecha: {{ formatDate(reserva.fecha) }} </p>
-              <p> Estado: <Tag :severity="colorEstadoReserva(reserva.estado)" :value="nombreEstadoReserva(reserva.estado)"/> </p> 
+              <p> Estado: 
+                <Tag 
+                  :severity="colorEstadoReserva(reserva.estado_reserva)" 
+                  :value="nombreEstadoReserva(reserva.estado_reserva)"/> 
+                </p> 
             </div>
             <div class="p-4 ring ring-slate-200 rounded-lg m-2">
               <p> Paquete : {{ reserva.paquete.nombre }}</p>
@@ -21,6 +25,7 @@
 </template>
 
 <script lang="ts" setup>
+import { colorEstadoReserva, nombreEstadoReserva } from '~/utils/utils'
 import { server } from '~/server/server'
 definePageMeta({ layout: 'menu-turista' }) 
 
@@ -44,7 +49,11 @@ onMounted(async () => {
 })
 
 const formatDate = (date: string) => {
-  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' }
+  const options: Intl.DateTimeFormatOptions = { 
+    year: 'numeric', 
+    month: '2-digit', 
+    day: '2-digit' 
+  }
   return new Date(date).toLocaleDateString('es-ES', options)
 }
 </script>

@@ -33,3 +33,8 @@ export function colorVisible(estado: boolean): string {
 export function nombreVisible(estado: boolean): string {
   return (estado === true) ? "Visible" : "Oculto"
 }
+
+export function diaSemana(dia : any): string {
+  const dias = ['', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+  return dias[dia];
+}

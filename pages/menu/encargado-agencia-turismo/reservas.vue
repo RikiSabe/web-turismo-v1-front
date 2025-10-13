@@ -22,7 +22,7 @@
           <template #body="slotProps">
             <div class="flex items-center justify-between">
               <span> {{ slotProps.data.nombre_paquete }} </span>
-              <Button icon="pi pi-eye" size="small" variant="text"/>
+              <!-- <Button icon="pi pi-eye" size="small" variant="text"/> -->
             </div>
           </template>
         </Column>
@@ -33,9 +33,11 @@
         </Column>
         <Column header="Comprobante">
           <template #body="slotProps">
-            <div class="flex justify-center">
+            <div class="flex justify-center items-center gap-2">
+              <p class="text-sm"> ver comprobante de pago </p>
               <Button 
-                icon="pi pi-eye" size="small" variant="text" />
+                icon="pi pi-eye" size="small" variant="text"
+                @click="abrirComprobante(slotProps.data.id_usuario, slotProps.data.id_reserva)" />
             </div>
           </template>
         </Column>
@@ -62,23 +64,34 @@
     </Fieldset>
   </div>
 
+  <ModalDetallesComprobante 
+    :id_reserva="id_reserva"
+    :id_usuario="id_usuario" 
+    :open="VisibleComprobante"
+    v-if="VisibleComprobante"
+    @close="VisibleComprobante = false" />
+
   <ModalDecidirReserva 
     :id="id_reserva" 
-    :open="Visible"
-    v-if="Visible"
-    @close="Visible = false"
+    :open="VisibleDecidir"
+    v-if="VisibleDecidir"
+    @close="VisibleDecidir = false"
     @update="obtenerReservas()" />
 </template>
 
 <script setup lang="ts">
-import { server } from '~/server/server'
 import ModalDecidirReserva from '~/components/admin/reservas/ModalDecidirReserva.vue'
+import ModalDetallesComprobante from '~/components/encargado-agencia-turismo/modalDetallesComprobante.vue'
+import { nombreEstadoReserva, colorEstadoReserva } from '~/utils/utils'
+import { server } from '~/server/server'
 
 definePageMeta({ layout: 'menu-encargado-agencia-turismo'}) 
 
 const Reservas = ref<any[]>([])
-const Visible = ref(false)
+const VisibleDecidir = ref(false)
+const VisibleComprobante = ref(false)
 const id_reserva = ref(0)
+const id_usuario = ref(0)
 
 onMounted( async () => {
   await obtenerReservas()
@@ -92,8 +105,14 @@ const obtenerReservas = async () => {
   console.log(Reservas.value)
 }
 
+const abrirComprobante = (id_usuario_param: any, id_reserva_param: any) => {
+  VisibleComprobante.value = true
+  id_usuario.value = id_usuario_param
+  id_reserva.value = id_reserva_param
+}
+
 const openDecidirReserva = (id: any) => {
-  Visible.value = true
+  VisibleDecidir.value = true
   id_reserva.value = id
 }
 </script>
