@@ -10,7 +10,16 @@
         </router-link>
       </template>
       <template #start>
-        <p> Turismo Tarija </p>
+        <div class="flex items-center">
+          <span> Turismo Bolivia </span>
+          <Divider layout="vertical"/>
+          <Button variant="text" severity="success">
+            <img :src="Usuario.foto" alt="Foto de perfil" class="w-8 h-8 rounded-full" />
+            <span>{{ Usuario.nombre_completo }}</span>
+          </Button>
+          <Divider layout="vertical"/>
+          <span> Encargado de Atracciones Turísticas </span>
+        </div>
       </template>
     </Menubar>
   </div>
@@ -18,7 +27,36 @@
 </template>
 
 <script setup lang="ts">
-  const items = [
-    { label: 'Cerrar Sesion', route: '/menu/publico/inicio' },
-  ]
+import { server } from '~/server/server'
+
+const items = [
+  { label: 'Cerrar Sesion', route: '/menu/publico/inicio' },
+]
+
+const Usuario = reactive({ nombre_completo: '',  foto: ''})
+
+const id = ref<any>(null)
+
+onMounted( async () => {
+  id.value = sessionStorage.getItem('id')
+  if( id.value ) {
+    await obtenerDatosUsuario()
+  } else {
+    console.error('No se encontró el ID del usuario en sessionStorage')
+  }
+})
+
+async function obtenerDatosUsuario() {
+  const res:any = await $fetch(server.HOST + '/api/v2/usuarios/menu/' + id.value, {
+    method: 'GET'
+  })
+  Usuario.nombre_completo = res.nombre_completo
+  const foto = res.foto
+  console.log(foto)
+  if(foto === "N/A"){
+    Usuario.foto = "/images/profile.jpg"
+  } else {
+    Usuario.foto = foto
+  }
+}
 </script>

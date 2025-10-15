@@ -189,7 +189,23 @@ const renombrarImagenes = () => {
 };
 
 async function handleChange() {
-  renombrarImagenes();
-  console.log('Imágenes listas para guardar:', Imagenes.value);
+  renombrarImagenes()
+  if (Imagenes.value.length === 0) {
+    console.error('No hay imágenes para guardar')
+    return
+  }
+  try {
+    const formData = new FormData()
+    Imagenes.value.forEach((file) => {
+      formData.append('fotos[]', file)
+    })
+    await $fetch(server.HOST + '/api/v1/agencias/fotos/' + id_atraccion, {
+      method: 'PUT',
+      body: formData,
+    })
+    router.back()
+  } catch (err) {
+    console.error('Error al guardar fotos:', err)
+  }
 }
 </script>

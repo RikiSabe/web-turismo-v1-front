@@ -6,7 +6,7 @@
           <template #content>
             <p class="flex justify-between gap-2 m-2 p-4"> Descripción:  {{ reserva.descripcion }} </p>
             <div class="flex justify-between gap-2 m-2 p-4">
-              <p> Fecha: {{ formatDate(reserva.fecha) }} </p>
+              <!-- <p> Fecha: {{ formatDate(reserva.fecha) }} </p> -->
               <p> Estado: 
                 <Tag 
                   :severity="colorEstadoReserva(reserva.estado_reserva)" 

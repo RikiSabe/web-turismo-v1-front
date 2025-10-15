@@ -54,6 +54,22 @@
         </div>
       </div>
     </div>
+    <div class="flex flex-col gap-2 p-4">
+      <label class="font-bold text-lg">Seleccione el número de personas:</label>
+      <Select 
+        v-model="NumeroPersonas"
+        :options="[ 
+          { label: '1 Persona', value: 1 }, 
+          { label: '2 Personas', value: 2 }, 
+          { label: '3 Personas', value: 3 }, 
+          { label: '4 Personas', value: 4 } 
+        ]"
+        placeholder="Número de Personas"
+        class="w-48"
+        optionLabel="label"
+        optionValue="value"
+      />
+    </div>
     <div class="flex justify-end gap-2 m-4">
       <Button
         label="Reservar Ahora"
@@ -74,7 +90,7 @@ const emit = defineEmits(["hidden", "confirm"]);
 const visible = ref<boolean>(true);
 watch(visible, (newVal) => { if( !newVal ) { emit('hidden') } })
 const id_usuario = ref<number>(0)
-
+const NumeroPersonas = ref<number>(1)
 const Paquete = reactive({
   id: 1,
   nombre: 'Paquete Aventura en los Andes',
@@ -134,8 +150,8 @@ const handleReservation = async () => {
       body: {
         id_paquete: props.id,
         id_usuario: id_usuario.value,
-        numero_personas: 1,
-        descripcion: `Reserva del paquete turístico con nombre: ${Paquete.nombre}, para 1 persona`,
+        numero_personas: NumeroPersonas.value,
+        descripcion: `Reserva del paquete turístico con nombre: ${Paquete.nombre}, para ${NumeroPersonas.value} persona(s).`,
         estado: true,
       }
     })

@@ -68,6 +68,20 @@ function removeFile(){
 }
 
 async function handleChange() {
-  // submit
+  if (!file.value) {
+    alert('Por favor seleccione una imagen');
+    return;
+  }
+  try {
+    const formData = new FormData()
+    formData.append('foto', file.value)
+    await $fetch(server.HOST + '/api/v1/usuarios/foto/' + id_usuario, {
+      method: 'PUT',
+      body: formData,
+    })
+    router.back()
+  } catch (err) {
+    console.error('Error al guardar foto:', err)
+  }
 }
 </script>

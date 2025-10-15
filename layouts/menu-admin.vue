@@ -17,6 +17,8 @@
             <img :src="Usuario.foto" alt="Foto de perfil" class="w-8 h-8 rounded-full" />
             <span>{{ Usuario.nombre_completo }}</span>
           </Button>
+          <Divider layout="vertical"/>
+          <span> Administrador </span>
         </div>
       </template>
     </Menubar>

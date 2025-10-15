@@ -1,13 +1,14 @@
 <template>
   <div class="p-2"> 
     <Fieldset legend="Reportes">
-      <div class="grid sm:grid-cols-1 lg:grid-cols-2 gap-4">
+      <div class="grid sm:grid-cols-1 lg:grid-cols-3 gap-4">
         <Card v-for="reporte in Reportes" :key="reporte.nombre">
           <template #content>
             <div class="flex flex-col gap-4">
-              <p class="text-center font-semibold text-slate-700"> 
+              <p class="text-center font-semibold text-slate-700 dark:text-white"> 
                 {{ reporte.nombre }} 
               </p>
+              <img :src="reporte.img" :alt="reporte.nombre" class="rounded-lg"/>
               <Button 
                 label="Imprimir"
                 size="small"
@@ -70,15 +71,18 @@ async function imprimirAgencias() {
 const Reportes = ref([
   {
     nombre: 'Imprimir todos los usuarios',
-    action: imprimirUsuario
+    action: imprimirUsuario,
+    img: '/images/report-users.png'
   },
   {
     nombre: 'Imprimir las atracciones turísticas',
-    action: imprimirAtracciones
+    action: imprimirAtracciones,
+    img: '/images/report-atraccs.png'
   },
   {
     nombre: 'Imprimir las agencias',
-    action: imprimirAgencias
+    action: imprimirAgencias,
+    img: '/images/report-agents.png'
   }
 ])
 </script>

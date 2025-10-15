@@ -21,7 +21,6 @@
 </template>
 
 <script setup lang="ts">
-import { ObtenerAtraccionesTuristicas } from '~/api/atracciones-turisticas'
 import { server } from '~/server/server'
 
 definePageMeta({ layout : 'menu-turista' })
