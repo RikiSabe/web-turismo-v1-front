@@ -60,6 +60,18 @@
           {{ $form.rol.error.message }}
         </Message>
       </div>
+      <div class="flex flex-col gap-1 w-96">
+        <label for="estado" class="text-sm text-slate-500"> Estado </label>
+        <Select 
+          id="estado" :options="Estados" name="estado"
+          placeholder="Seleccion un estado"
+          optionLabel="label" optionValue="value"
+          v-model="initialValues.estado"
+          fluid size="small" />
+        <Message v-if="$form.estado?.invalid" severity="error" size="small" variant="simple">
+          {{ $form.estado.error.message }}
+        </Message>
+      </div>
       <div class="grid grid-cols-2 gap-2 pt-2 w-96">
         <Button 
           type="button" label="Cancelar" severity="danger"
@@ -87,8 +99,14 @@ const initialValues = reactive({
   complemento: '',
   correo: '',
   contra: '',
-  rol : ''
+  rol : '',
+  estado: true
 })
+
+const Estados = ref([
+  { label: 'Activo', value: true },
+  { label: 'Inactivo', value: false }
+])
 
 async function resolver(){
   usuarioStep2Resolver(CorreosUsuarios.value, Roles.value)
@@ -117,15 +135,25 @@ async function obtenerDatosUsuario(){
     initialValues.correo = res.correo
     initialValues.contra = res.contra
     initialValues.rol = res.rol
+    initialValues.estado = res.estado
     formKey.value++
   } catch (err){
     console.error(err)
   }
 }
 
-async function handleChange({valid, value} : any) {
+async function handleChange({ valid } : any) {
   if( valid ){
     console.log(JSON.stringify(initialValues, null, 2))
+    try {
+      await $fetch(server.HOST + '/api/v1/usuarios/datos-privados/' + id_usuario, {
+        method: 'PUT',
+        body: initialValues
+      })
+      router.back()
+    } catch (e) {
+      console.error(e)
+    }
   }
 }
 

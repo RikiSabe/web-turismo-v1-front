@@ -1,5 +1,5 @@
 <template>
-  <p class="text-center text-2xl text-slate-600 font-semibold mt-8 mb-8"> Modificar Datos Especificos </p>
+  <p class="text-center text-2xl text-slate-600 font-semibold mt-8 mb-8 p-8"> Modificar Datos Especificos </p>
   <Form 
     v-slot="$form" 
     :initialValues="initialValues" :resolver="resolver" :key="formKey"
@@ -42,6 +42,23 @@
           size="small" fluid />
         <Message v-if="$form.precio?.invalid" severity="error" size="small" variant="simple">
           {{ $form.precio.error.message }}
+        </Message>
+      </div>
+
+      <!-- Estado -->
+      <div class="flex flex-col gap-1 w-96">
+        <label for="estado" class="text-slate-500"> Estado </label>
+        <Select 
+          id="estado" name="estado"
+          v-model="initialValues.estado"
+          :options="[
+            { label: 'Activo', value: true },
+            { label: 'Inactivo', value: false }
+          ]"
+          placeholder="Seleccione el estado de la atracción turística"
+          optionLabel="label" optionValue="value" checkmark size="small" />
+        <Message v-if="$form.estado?.invalid" severity="error" size="small" variant="simple">
+          {{ $form.estado.error.message }}
         </Message>
       </div>
       
@@ -115,6 +132,7 @@ const initialValues = reactive({
   horario_apertura: new Date(),
   horario_cierre: new Date(),
   precio: '',
+  estado: true
 })
 
 onMounted( async () => {
@@ -181,6 +199,24 @@ function eliminarSubcategoria(index: number) {
 }
 
 async function handleChange( {valid} : any ){
-
+  if( valid ){
+    try {
+      const payload = {
+        horario_apertura: initialValues.horario_apertura,
+        horario_cierre: initialValues.horario_cierre,
+        precio: initialValues.precio,
+        estado: initialValues.estado,
+        subcategorias: subcategoriasSeleccionadas.value
+      }
+      console.log(JSON.stringify(payload, null, 2))
+      await $fetch(server.HOST + '/api/v2/atracciones-turisticas/datos-especificos/' + id_atraccion, {
+        method: 'PUT',
+        body: payload
+      })
+      router.back()
+    } catch (err) {
+      console.error(err)
+    }
+  }
 } 
 </script>

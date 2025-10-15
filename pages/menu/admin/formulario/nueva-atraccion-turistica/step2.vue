@@ -94,14 +94,14 @@
 
 <script setup lang="ts">
 import { server } from '~/server/server';
-import { usuarioStep1Resolver } from '~/utils/schemas/usuario';
+import { atraccionStep2Resolver } from '~/utils/schemas/atracciones';
 
 const props = defineProps<{ modalValue : any}>()
 const emit = defineEmits(['update:modelValue', 'submited', 'return'])
 
 const initialValues = props.modalValue
 
-const resolver = computed( () => usuarioStep1Resolver)
+const resolver = computed( () => atraccionStep2Resolver)
 
 async function handleSubmit( {valid, values} : any ) {
   if ( valid ) {

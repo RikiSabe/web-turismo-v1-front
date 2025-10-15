@@ -60,7 +60,7 @@
         <Select 
           id="departamento" name="departamento" 
           placeholder="Seleccione el departamento donde se encuentra el nuevo usuario"
-          v-model="id_departamento" :options="Departamentos"
+          v-model="initialValues.departamento" :options="Departamentos"
           optionLabel="nombre" optionValue="id" checkmark size="small"/>
         <Message v-if="$form.departamento?.invalid" severity="error" size="small" variant="simple">
           {{ $form.departamento.error.message }}
@@ -72,7 +72,7 @@
         <Select
           placeholder="Seleccione la provincia donde se encuentra el nuevo usuario"
           id="provincia" v-if="Provincias.length" name="provincia"
-          v-model="id_provincia" :options="Provincias"
+          v-model="initialValues.provincia" :options="Provincias"
           optionLabel="nombre" optionValue="id" checkmark size="small" />
         <Message v-if="$form.provincia?.invalid" severity="error" size="small" variant="simple">
           {{ $form.provincia.error.message }}
@@ -104,7 +104,9 @@ const initialValues = reactive({
   apellido_paterno: '',
   telefono: '',
   fecha_nacimiento: new Date(),
-  id_ubicacion: 0
+  id_ubicacion: 0,
+  departamento: null,
+  provincia: null
 })
 
 const resolver = computed( () => usuarioStep1Resolver() )
@@ -132,9 +134,9 @@ async function ObtenerDatosUsuario() {
     initialValues.apellido_materno = res.apellido_materno
     initialValues.telefono = res.telefono
     initialValues.fecha_nacimiento = res.fecha_nacimiento
-    id_departamento.value = res.id_departamento
+    initialValues.departamento = res.id_departamento
     await obtenerProvincias(res.id_departamento)
-    id_provincia.value = res.id_ubicacion
+    initialValues.provincia = res.id_ubicacion
     initialValues.id_ubicacion = res.id_ubicacion
     formKey.value++
   } catch (err) {
@@ -180,7 +182,16 @@ async function obtenerProvincias(id : any) {
 
 async function handleChange( {valid, values} : any ) {
   if( valid ) {
-    console.log(JSON.stringify(values, null, 2))
+    console.log(JSON.stringify(initialValues, null, 2))
+    try {
+      await $fetch(server.HOST + '/api/v1/usuarios/datos-personales/' + id_usuario, {
+        method: 'PUT',
+        body: initialValues
+      })
+      router.back()
+    } catch (e) {
+      console.error(e)
+    }
   }
 }
 </script>

@@ -132,6 +132,7 @@ async function obtenerDatosAtraccion(){
     Object.assign(initialValues, res)
     id_departamento.value = res.id_departamento
     await obtenerProvincias(id_departamento.value)
+    console.log(JSON.stringify(initialValues, null, 2))
     formKey.value++
   } catch (err) {
     console.error(err)
@@ -152,7 +153,7 @@ async function obtenerDepartamentos(){
   Departamentos.value = res
 }
 
-watch(id_departamento, async (newValue) => {
+watch(id_departamento, async(newValue) => {
   id_ubicacion.value = null
   if( newValue != null ){
     await obtenerProvincias(newValue)
@@ -167,9 +168,18 @@ async function obtenerProvincias(id : any) {
   Provincias.value = res
 }
 
-async function handleChange( {valid} : any) {
+async function handleChange( { valid } : any) {
   if( valid ){
-    console.log(initialValues)
+    // console.log(JSON.stringify(initialValues, null, 2))
+    try {
+      await $fetch(server.HOST + '/api/v2/atracciones-turisticas/datos-generales/' + id_atraccion, {
+        method: 'PUT',
+        body: initialValues
+      })
+      router.back()
+    } catch (err) {
+      console.error(err)
+    }
   }
 }
 </script>

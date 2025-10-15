@@ -92,7 +92,7 @@
 
 <script setup lang="ts">
 import { server } from '~/server/server';
-import { usuarioStep1Resolver } from '~/utils/schemas/usuario';
+import { atraccionStep1Resolver } from '~/utils/schemas/atracciones';
 
 const props = defineProps<{ modalValue: any }>()
 const emit = defineEmits(['update:modelValue', 'submited'])
@@ -100,7 +100,7 @@ const emit = defineEmits(['update:modelValue', 'submited'])
 const router = useRouter()
 const initialValues = props.modalValue
 
-const resolver = computed( () =>  usuarioStep1Resolver ) // cambiar a atraccion turistica
+const resolver = computed( () => atraccionStep1Resolver )
 
 const Encargados = ref<any[]>([])
 const Departamentos = ref<any[]>([]) 

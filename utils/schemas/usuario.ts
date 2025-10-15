@@ -14,11 +14,11 @@ export const getSchemaUsuarioStep1 = () => z.object({
     .max(8, { message: 'El teléfono no puede tener más de 8 dígitos.' }),
 
   departamento: z.number({
-    required_error: 'Seleccione un departamento.'
+    message: 'Seleccione un departamento.'
   }),
 
   provincia: z.number({
-    required_error: 'Seleccione una provincia.'
+    message: 'Seleccione una provincia.'
   }),
 })
 

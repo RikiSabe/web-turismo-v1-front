@@ -1,4 +1,5 @@
 <template>
+  <p class="text-center text-2xl text-slate-600 font-semibold mt-8 mb-8"> Modificar Datos Generales </p>
   <Form 
     v-slot="$form" 
     :initialValues="initialValues" :resolver="resolver" :key="formKey" 
@@ -100,6 +101,20 @@
           {{ $form.direccion.error.message }}
         </Message>
       </div>
+      <!-- Estado -->
+      <div class="flex flex-col gap-1 w-96">
+        <label for="estado" class="text-sm text-slate-500"> Estado </label>
+        <Select
+          id="estado" name="estado" 
+          placeholder="Seleccione un estado"
+          :options="[{label: 'Activo', value: true}, {label: 'Inactivo', value: false}]"
+          optionLabel="label" optionValue="value" checkmark
+          v-model="initialValues.estado"
+          size="small" fluid/>
+        <Message v-if="$form.estado?.invalid" severity="error" size="small" variant="simple">
+          {{ $form.estado.error.message }}
+        </Message>
+      </div>
       <div class="grid grid-cols-2 gap-2 pt-2 w-96">
         <Button 
           type="button" label="Cancelar" severity="danger"
@@ -131,7 +146,8 @@ const initialValues = reactive({
   id_encargado: 0,
   descripcion: '',
   id_departamento: 0,
-  direccion: ''
+  direccion: '',
+  estado: true
 })
 
 onMounted( async () => {
@@ -147,6 +163,7 @@ async function obtenerDatosAgencia(){
     })
     console.log(JSON.stringify(res, null, 2))
     Object.assign(initialValues, res)
+    initialValues.id_departamento = res.id_departamento
     formKey.value++
   } catch (err){
     console.error(err)
@@ -181,7 +198,16 @@ const resolver = computed( () => agenciaResolver() )
 
 async function handleChange( {valid} : any ){
   if( valid ){
-    console.log(initialValues)
+    // console.log(JSON.stringify(initialValues, null, 2))
+    try {
+      await $fetch(server.HOST + '/api/v1/agencias/datos-generales/' + id_agencia, {
+        method: 'PUT',
+        body: initialValues
+      })
+      router.back()
+    } catch(e) {
+      console.error(e)
+    }
   }
 }
 </script>

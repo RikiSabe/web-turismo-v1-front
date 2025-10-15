@@ -27,7 +27,7 @@
               <div class="flex flex-col gap-1">
                 <label for="contra" class="text-sm text-slate-500"> Contraseña </label>
                 <Password 
-                  placeholder="contraseña super segura"
+                  placeholder="contraseña"
                   id="contra" name="contra"
                   v-model="initialValues.contra" toggleMask 
                   :feedback="false" inputClass="w-full" 
@@ -36,7 +36,6 @@
                   {{ $form.contra.error.message }}
                 </Message>
               </div>
-    
               <Button type="submit" label="Ingresar" variant="outlined" size="small" />
             </Form>
             <Divider align="center">
