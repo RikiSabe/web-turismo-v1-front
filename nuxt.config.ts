@@ -20,5 +20,10 @@ export default defineNuxtConfig({
         preset: Aura
       }
     }
+  },
+  runtimeConfig: {
+    public: {
+      apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:5750'
+    }
   }
 })
