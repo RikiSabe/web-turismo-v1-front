@@ -2,8 +2,8 @@
   <Toast />
   <div class="p-2">
     <div class="flex items-center justify-center">
-      <div class="card justify-center bg-white dark:bg-neutral-800 mt-8 p-8 rounded-lg">
-        <div class="grid grid-cols-2 gap-4 p-4 rounded-lg ring ring-slate-200">
+      <div class="card justify-center bg-white dark:bg-neutral-800 lg:mt-8 lg:p-8 rounded-lg">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4 rounded-lg ring ring-slate-200">
           <div>
             <img alt="login-image" src="/public/images/Registrate.jpg" class="w-96 h-[26.5rem] rounded-lg"/>
           </div>
