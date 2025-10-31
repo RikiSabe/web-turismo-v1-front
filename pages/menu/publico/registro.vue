@@ -105,15 +105,13 @@ const initialValues = reactive({
 async function handleIngreso({valid} : any) {
   if( valid ) {
     try {
-      const response:any = await $fetch(server.HOST + '/api/v1/registro', {
+      const res:any = await $fetch(server.HOST + '/api/v1/registro', {
         method: 'POST',
         body: initialValues
       })
-      if (response.ok) {
-        await useRouter().push('/menu/publico/ingreso')
-      } else {
-        console.error('Registration failed:', response.message)
-      }
+      console.log(res)
+      sessionStorage.setItem('id', res.id)
+      await useRouter().push('/menu/turista/inicio')
     } catch (error) {
       console.error('Error during registration:', error)
     }

@@ -32,6 +32,7 @@ import { server } from '~/server/server'
 const items = [
   { label: 'Atracciones', route: '/menu/encargado-agencia-turismo/atracciones'},
   { label: 'Paquetes', route: '/menu/encargado-agencia-turismo/paquetes'},
+  { label: 'Operaciones', route: '/menu/encargado-agencia-turismo/operaciones'},
   { label: 'Reservas', route: '/menu/encargado-agencia-turismo/reservas'},
   { label: 'Pagos', route: '/menu/encargado-agencia-turismo/pagos' },
   { label: 'Cerrar Sesion', route: '/menu/publico/inicio' },
